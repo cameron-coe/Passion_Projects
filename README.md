@@ -5,3 +5,9 @@ An application that lets users create budgets and break down each item down into
 
 ### About this Project:
 I started this project after being enrolled in Tech Elevator's Java Bootcamp for four weeks. I continued modifying and improving this project until the end of the program.
+<br>
+
+### This Project Utilizes:
+> - Object-Oriented Programming Principles
+> - Java
+> - JUnit Testing
