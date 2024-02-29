@@ -1,5 +1,5 @@
 # Cameron Coe's Budget Managing Application
-An application that lets users create budgets and break down each item into more specific components.
+An application that lets users create budgets and break down each item down into more specific components.
 <br> 
 <br>
 
