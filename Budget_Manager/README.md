@@ -9,5 +9,6 @@ I started this project after being enrolled in Tech Elevator's Java Bootcamp for
 
 ### This Project Utilizes:
 > - Object-Oriented Programming Principles
-> - Java
+> - Recursive Methods
 > - JUnit Testing
+> - Java

@@ -1,5 +1,5 @@
 # Cameron Coe's Flashcard Application
-This application lets users create decks, name them, create flashcards in each deck, take quizzes based on their flashcards, and save/load their decks and cards.
+This application lets users create decks of flashcards, organize them, and generate quizzes to help them study. After every update to the decks or flashcards, the software saves their data in a text file.
 I started this project after being enrolled in Tech Elevator's Java Bootcamp for three weeks. I continued modifying and improving this project until the end of the program.
 <br>
 <br>
