@@ -9,9 +9,14 @@ public class Deck {
     private String deckName = "";
     private List<Flashcard> listOfFlashcardsInDeck;
 
+    // 1 = multiple choice
+    // 2 = true/false
+    // 3 = free answer
+    private int quizType;
+
 
     // Constructor
-    public Deck(String deckName) {
+    public Deck(String deckName, int quizType) {
         this.deckName = deckName;
         this.listOfFlashcardsInDeck = new ArrayList<>();
     }
@@ -20,6 +25,10 @@ public class Deck {
     // Getters
     public String getDeckName() {
         return this.deckName;
+    }
+
+    public int getQuizType(){
+        return this.quizType;
     }
 
     public int getDeckSize() {

@@ -1,4 +1,4 @@
-package main.java.quizzes;
+package main.java.model.quizzes;
 
 import main.java.model.Flashcard;
 

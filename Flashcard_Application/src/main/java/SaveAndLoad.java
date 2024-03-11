@@ -40,7 +40,7 @@ public class SaveAndLoad {
                 if (currentLine.length() > 0) {  // Don't load empty lines
                     if (currentLine.charAt(0) != BREAK_BETWEEN_DECK_NAME_AND_FLASHCARDS.charAt(0)) {  // Don't load data without a deck name
                         String[] splitToGetDeckName = currentLine.split(BREAK_BETWEEN_DECK_NAME_AND_FLASHCARDS);
-                        Deck currentDeck = new Deck(splitToGetDeckName[0]);
+                        Deck currentDeck = new Deck(splitToGetDeckName[0], 1);
 
                         if (splitToGetDeckName.length > 1) {
                             String[] splitToGetFlashcards = splitToGetDeckName[1].split(BREAK_BETWEEN_FLASHCARDS);

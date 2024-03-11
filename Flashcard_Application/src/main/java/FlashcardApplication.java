@@ -2,8 +2,8 @@ package main.java;
 
 import main.java.model.Deck;
 import main.java.model.Flashcard;
-import main.java.quizzes.MultipleChoiceQuiz;
-import main.java.quizzes.ReviewQuiz;
+import main.java.model.quizzes.MultipleChoiceQuiz;
+import main.java.model.quizzes.ReviewQuiz;
 import main.java.view.FlashcardMenu;
 
 import java.util.List;
@@ -144,7 +144,7 @@ public class FlashcardApplication {
         menu.showNewDeckPage();
 
         String newDeckName = menu.requestUserInput();
-        Deck deckToAdd = new Deck(newDeckName);
+        Deck deckToAdd = new Deck(newDeckName, 1);
 
         allDecksManager.setCurrentDeck(deckToAdd);
         allDecksManager.addDeckToListOfAllDecks( allDecksManager.getCurrentDeck() );
