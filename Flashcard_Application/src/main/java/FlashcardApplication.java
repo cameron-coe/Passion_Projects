@@ -9,18 +9,15 @@ import main.java.view.FlashcardMenu;
 import java.util.List;
 
 /**
- * TODO: Add Subjects to hold multiple decks
- * TODO: Set a quiz type for each deck - multiple choice, true/false, & free answer
- * TODO: Make sure the answers on multiple choice nad free answer quizzes cannot repeat
- * TODO: Add quiz type to each save
- * TODO: Revise saving to save everything on one line -- separate decks w/ a diamond or something
- * TODO: Make a 'stringToDeck' Method in save
+ * TODO: Make sure the answers on multiple choice and free answer quizzes cannot repeat when you make new cards
  * TODO: Make Self-Reviews a separate option from Quizzes
- * TODO: Make it so multiple choice quizzes ask the same 5 questions and have a pool of wrong answers
+ * TODO: Make it so multiple choice quizzes only have 5 flashcards by including a pool of wrong answers
  * TODO: Track total score over lifetime
+ * TODO: Shouldn't have to save in Application anymore, the Collection Manager will do that for all methods that change the data
+ * TODO: Move edit methods over to collection Manager
  *
  * After learning about Website design:
- * TODO: Make a visual representation of progress
+ * TODO: Make a visual representation of progress -- Dragons
  */
 
 public class FlashcardApplication {
@@ -43,16 +40,16 @@ public class FlashcardApplication {
 
     // Instance Variables
     private FlashcardMenu menu;
-    private AllDecksManager allDecksManager;
+    private CollectionManager collectionManager;
     private String currentPage = HOMEPAGE;
 
 
     // Main Method
     public static void main(String[] args) {
         FlashcardMenu menu = new FlashcardMenu();
-        AllDecksManager allDecksManager = new AllDecksManager();
+        CollectionManager collectionManager = new CollectionManager();
 
-        FlashcardApplication app = new FlashcardApplication(menu, allDecksManager);
+        FlashcardApplication app = new FlashcardApplication(menu, collectionManager);
         app.run();
     }
 
@@ -60,9 +57,9 @@ public class FlashcardApplication {
     /*******************************************************************************************************************
      * Constructor
      */
-    public FlashcardApplication (FlashcardMenu menu, AllDecksManager allDecksManager) {
+    public FlashcardApplication (FlashcardMenu menu, CollectionManager collectionManager) {
         this.menu = menu;
-        this.allDecksManager = allDecksManager;
+        this.collectionManager = collectionManager;
         this.currentPage = HOMEPAGE;
     }
 
@@ -72,7 +69,7 @@ public class FlashcardApplication {
      */
     public void run () {
         menu.showWelcomeScreen();
-        allDecksManager.loadData();
+        collectionManager.loadData();
 
         boolean isRunning = true;
         while (isRunning) {
@@ -118,14 +115,14 @@ public class FlashcardApplication {
      * Methods for different pages
      */
     private void homepage() {
-        menu.showHomepage(allDecksManager.getListOfAllDecks());
+        menu.showHomepage(collectionManager.getListOfAllDecks());
         String userInput = menu.requestUserInputAndFormat();
 
         // Go to selected deck if we can parse user input to an int, otherwise check for other input command
         try{
             int userInputToInt = Integer.parseInt(userInput);
-            if (0 < userInputToInt && userInputToInt <= allDecksManager.getListOfAllDecks().size()) {
-                allDecksManager.setCurrentDeck(allDecksManager.getListOfAllDecks().get( userInputToInt - 1 ));
+            if (0 < userInputToInt && userInputToInt <= collectionManager.getListOfAllDecks().size()) {
+                collectionManager.setCurrentDeck(collectionManager.getListOfAllDecks().get( userInputToInt - 1 ));
                 this.currentPage = DECK_PAGE;
             } else {
                 menu.askUserToRetryInput("Sorry, the given number is out of bounds.");
@@ -146,22 +143,22 @@ public class FlashcardApplication {
         String newDeckName = menu.requestUserInput();
         Deck deckToAdd = new Deck(newDeckName, 1);
 
-        allDecksManager.setCurrentDeck(deckToAdd);
-        allDecksManager.addDeckToListOfAllDecks( allDecksManager.getCurrentDeck() );
-        allDecksManager.saveData();
+        collectionManager.setCurrentDeck(deckToAdd);
+        collectionManager.addDeckToListOfAllDecks( collectionManager.getCurrentDeck() );
+        collectionManager.saveData();
 
         currentPage = DECK_PAGE;
     }
 
     private void currentDeckPage() {
-        menu.showDeckPage(allDecksManager.getCurrentDeck());
+        menu.showDeckPage(collectionManager.getCurrentDeck());
 
         String userInput = menu.requestUserInputAndFormat();
 
         if (userInput.equals("h")) {
             // Go to homepage
             currentPage = HOMEPAGE;
-            allDecksManager.setCurrentDeck(null);
+            collectionManager.setCurrentDeck(null);
 
         } else if (userInput.equals("n")) {
             // Create new flashcard
@@ -175,7 +172,7 @@ public class FlashcardApplication {
             //  Delete this deck
             currentPage = DELETE_DECK_PAGE;
 
-        } else if (allDecksManager.getCurrentDeck().getDeckSize() > 0) {
+        } else if (collectionManager.getCurrentDeck().getDeckSize() > 0) {
             if (userInput.equals("q")) {
                 // Take a quiz
                 currentPage = QUIZZES_PAGE;
@@ -201,18 +198,18 @@ public class FlashcardApplication {
         String flashcardBack = menu.requestUserInput();
 
         Flashcard flashcardToAdd = new Flashcard(flashcardFront, flashcardBack);
-        allDecksManager.addFlashCardToCurrentDeck(flashcardToAdd);
+        collectionManager.addFlashCardToCurrentDeck(flashcardToAdd);
         currentPage = DECK_PAGE;
 
-        allDecksManager.saveData();
+        collectionManager.saveData();
     }
 
     private void editFlashcardPage() {
         menu.showEditFlashcardPage();
 
-        editFlashCard(allDecksManager.getCurrentFlashcard());
+        editFlashCard(collectionManager.getCurrentFlashcard());
 
-        allDecksManager.setCurrentFlashcard(null);
+        collectionManager.setCurrentFlashcard(null);
         currentPage = ALL_FLASHCARDS_IN_DECK_PAGE;
     }
 
@@ -229,15 +226,15 @@ public class FlashcardApplication {
             flashcardToUpdate.setBack(newFlashcardBack);
         }
 
-        allDecksManager.saveData();
+        collectionManager.saveData();
     }
 
     private void deleteDeckPage() {
-        menu.showDeleteDeckPage( allDecksManager.getCurrentDeck() );
+        menu.showDeleteDeckPage( collectionManager.getCurrentDeck() );
         boolean deleteDeck = menu.requestUserInputAndFormat().equals("y");
         if (deleteDeck) {
-            allDecksManager.deleteCurrentDeck();
-            allDecksManager.saveData();
+            collectionManager.deleteCurrentDeck();
+            collectionManager.saveData();
             currentPage = HOMEPAGE;
         } else {
             currentPage = DECK_PAGE;
@@ -245,23 +242,23 @@ public class FlashcardApplication {
     }
 
     private void renameCurrentDeckPage(){
-        menu.showRenameDeckPage(allDecksManager.getCurrentDeck());
+        menu.showRenameDeckPage(collectionManager.getCurrentDeck());
         String newDeckName = menu.requestUserInput();
-        allDecksManager.getCurrentDeck().setDeckName( newDeckName );
+        collectionManager.getCurrentDeck().setDeckName( newDeckName );
         currentPage = DECK_PAGE;
 
-        allDecksManager.saveData();
+        collectionManager.saveData();
     }
 
     private void lookAtFlashcardsInDeckPage(){
-        menu.showAllFlashcardsInDeckPage( allDecksManager.getCurrentDeck() );
+        menu.showAllFlashcardsInDeckPage( collectionManager.getCurrentDeck() );
         String userInput = menu.requestUserInputAndFormat();
 
         // Go to selected flashcard if we can parse user input to an int, otherwise check for other input command
         try{
             int userInputToInt = Integer.parseInt(userInput);
-            if (0 < userInputToInt && userInputToInt <= allDecksManager.getCurrentDeck().getDeckSize()) {
-                allDecksManager.setCurrentFlashcard(allDecksManager.getCurrentDeck().getFlashcardsInDeck().get( userInputToInt - 1 ));
+            if (0 < userInputToInt && userInputToInt <= collectionManager.getCurrentDeck().getDeckSize()) {
+                collectionManager.setCurrentFlashcard(collectionManager.getCurrentDeck().getFlashcardsInDeck().get( userInputToInt - 1 ));
                 currentPage = FLASHCARD_PAGE;
             } else {
                 menu.askUserToRetryInput("Sorry, the given number is out of bounds.");
@@ -277,7 +274,7 @@ public class FlashcardApplication {
     }
 
     private void currentFlashcardPage() {
-        menu.showFlashcardPage( allDecksManager.getCurrentFlashcard() );
+        menu.showFlashcardPage( collectionManager.getCurrentFlashcard() );
 
         String userInput = menu.requestUserInputAndFormat();
         if(userInput.equals("e")) {
@@ -286,16 +283,16 @@ public class FlashcardApplication {
 
         } else if (userInput.equals("d")) {
             // Delete Flashcard
-            Flashcard currentFlashcard = allDecksManager.getCurrentFlashcard();
-            allDecksManager.getCurrentDeck().removeFlashcard(currentFlashcard);
-            allDecksManager.setCurrentFlashcard(null);
-            allDecksManager.saveData();
+            Flashcard currentFlashcard = collectionManager.getCurrentFlashcard();
+            collectionManager.getCurrentDeck().removeFlashcard(currentFlashcard);
+            collectionManager.setCurrentFlashcard(null);
+            collectionManager.saveData();
             currentPage = ALL_FLASHCARDS_IN_DECK_PAGE;
 
         } else if (userInput.equals("b")) {
             // Go Back to SHow All Flashcards Page
             currentPage = ALL_FLASHCARDS_IN_DECK_PAGE;
-            allDecksManager.setCurrentFlashcard(null);
+            collectionManager.setCurrentFlashcard(null);
         }
     }
 
@@ -309,7 +306,7 @@ public class FlashcardApplication {
         String userInput = menu.requestUserInputAndFormat();
 
         int quizScore = 0;
-        List<Flashcard> allFlashcardsInCurrentDeck = allDecksManager.getCurrentDeck().getFlashcardsInDeck();
+        List<Flashcard> allFlashcardsInCurrentDeck = collectionManager.getCurrentDeck().getFlashcardsInDeck();
 
         // Review Quiz
         if (userInput.equals("b") || userInput.equals("d") || userInput.equals("f")) {
@@ -336,7 +333,7 @@ public class FlashcardApplication {
                 }
                 else if (userInput.equals("e")) {
                     //Edit the flashcard and put it back in the deck
-                    editFlashCard(allDecksManager.getCurrentDeck().getMatchingFlashcard(currentQuizCard));
+                    editFlashCard(collectionManager.getCurrentDeck().getMatchingFlashcard(currentQuizCard));
                     reviewQuiz.putPulledCardBackIntoQuizCardsList();
                     quizScore += 1; // You get a point for editing a card
                     menu.cardRevisionMessage();
@@ -374,7 +371,7 @@ public class FlashcardApplication {
                     }
                     else if (userAnswer.equals("e")) {
                         //Edit the flashcard and put it back in the deck
-                        editFlashCard(allDecksManager.getCurrentDeck().getMatchingFlashcard(currentQuizCard));
+                        editFlashCard(collectionManager.getCurrentDeck().getMatchingFlashcard(currentQuizCard));
                         multipleChoiceQuiz.putPulledCardBackIntoQuizCardsList();
                         quizScore += 1; // You get a point for editing a card
                         menu.cardRevisionMessage();

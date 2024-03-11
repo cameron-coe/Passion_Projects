@@ -18,6 +18,7 @@ public class Deck {
     // Constructor
     public Deck(String deckName, int quizType) {
         this.deckName = deckName;
+        this.quizType = quizType;
         this.listOfFlashcardsInDeck = new ArrayList<>();
     }
 
@@ -55,6 +56,10 @@ public class Deck {
     // Setters
     public void setDeckName(String deckName) {
         this.deckName = deckName;
+    }
+
+    public void setListOfFlashcardsInDeck(List<Flashcard> flashcardList){
+        this.listOfFlashcardsInDeck = flashcardList;
     }
 
 
