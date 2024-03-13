@@ -1,12 +1,16 @@
 package main.java.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameDataDto {
     private int totalScore;
     private List<Subject> subjectList;
 
-    public GameDataDto() {}
+    public GameDataDto() {
+        totalScore = 0;
+        subjectList = new ArrayList<>();
+    }
 
     public int getTotalScore() {
         return totalScore;

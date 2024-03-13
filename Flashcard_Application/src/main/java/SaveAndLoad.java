@@ -34,7 +34,7 @@ public class SaveAndLoad {
 
     // Methods
     public GameDataDto loadSaveData() {
-        GameDataDto gameData = null;
+        GameDataDto gameData = new GameDataDto();
 
         try (Scanner dataInput = new Scanner(SAVE_FILE)) {
             while(dataInput.hasNextLine()) {

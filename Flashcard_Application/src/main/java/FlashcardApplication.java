@@ -5,6 +5,7 @@ import main.java.model.Flashcard;
 import main.java.model.quizzes.MultipleChoiceQuiz;
 import main.java.model.quizzes.ReviewQuiz;
 import main.java.view.FlashcardMenu;
+import main.java.view.gui.Gui;
 
 import java.util.List;
 
@@ -21,7 +22,10 @@ import java.util.List;
  */
 
 public class FlashcardApplication {
-    // Constants
+
+    /*******************************************************************************************************************
+     * Constants
+     */
     private final static String HOMEPAGE = "homepage";
     private final static String DECK_PAGE = "deck page";
     private final static String NEW_DECK_PAGE = "new deck dage";
@@ -37,19 +41,24 @@ public class FlashcardApplication {
     private final static int  MID_SIZED_QUIZ = 15;
 
 
-
-    // Instance Variables
+    /*******************************************************************************************************************
+     * Instance Variables
+     */
     private FlashcardMenu menu;
+    private Gui gui;
     private CollectionManager collectionManager;
     private String currentPage = HOMEPAGE;
 
 
-    // Main Method
+    /*******************************************************************************************************************
+     * Main Method
+     */
     public static void main(String[] args) {
-        FlashcardMenu menu = new FlashcardMenu();
+        //FlashcardMenu menu = new FlashcardMenu();
+        Gui gui = new Gui();
         CollectionManager collectionManager = new CollectionManager();
 
-        FlashcardApplication app = new FlashcardApplication(menu, collectionManager);
+        FlashcardApplication app = new FlashcardApplication(gui, collectionManager);
         app.run();
     }
 
@@ -57,8 +66,9 @@ public class FlashcardApplication {
     /*******************************************************************************************************************
      * Constructor
      */
-    public FlashcardApplication (FlashcardMenu menu, CollectionManager collectionManager) {
-        this.menu = menu;
+    public FlashcardApplication (Gui gui, CollectionManager collectionManager) {
+        // this.menu = menu;
+        this.gui = gui;
         this.collectionManager = collectionManager;
         this.currentPage = HOMEPAGE;
     }
@@ -68,8 +78,9 @@ public class FlashcardApplication {
      * Runtime Method
      */
     public void run () {
-        menu.showWelcomeScreen();
         collectionManager.loadData();
+        //menu.showWelcomeScreen();
+
 
         boolean isRunning = true;
         while (isRunning) {
@@ -77,31 +88,31 @@ public class FlashcardApplication {
                 homepage();
             }
             else if (currentPage.equals(NEW_DECK_PAGE)) {
-                makeANewDeckPage();
+                //makeANewDeckPage();
             }
             else if (currentPage.equals(DECK_PAGE)) {
-                currentDeckPage();
+                //currentDeckPage();
             }
             else if (currentPage.equals(NEW_FLASHCARD_PAGE)) {
-                newFlashcardPage();
+                //newFlashcardPage();
             }
             else if (currentPage.equals(DELETE_DECK_PAGE)) {
-                deleteDeckPage();
+                //deleteDeckPage();
             }
             else if (currentPage.equals(RENAME_DECK_PAGE)) {
-                renameCurrentDeckPage();
+                //renameCurrentDeckPage();
             }
             else if (currentPage.equals(ALL_FLASHCARDS_IN_DECK_PAGE)) {
-                lookAtFlashcardsInDeckPage();
+                //lookAtFlashcardsInDeckPage();
             }
             else if (currentPage.equals(FLASHCARD_PAGE)) {
-                currentFlashcardPage();
+                //currentFlashcardPage();
             }
             else if (currentPage.equals(EDIT_FLASHCARD_PAGE)) {
-                editFlashcardPage();
+                //editFlashcardPage();
             }
             else if (currentPage.equals(QUIZZES_PAGE)) {
-                quizzesPage();
+                //quizzesPage();
             }
             else {
                 // If the current page gets an invalid value, go back to the home page
@@ -115,14 +126,16 @@ public class FlashcardApplication {
      * Methods for different pages
      */
     private void homepage() {
-        menu.showHomepage(collectionManager.getListOfAllDecks());
+
+        /*
+        menu.showHomepage(collectionManager.getCurrentSubject().getListOfDecks());
         String userInput = menu.requestUserInputAndFormat();
 
         // Go to selected deck if we can parse user input to an int, otherwise check for other input command
         try{
             int userInputToInt = Integer.parseInt(userInput);
-            if (0 < userInputToInt && userInputToInt <= collectionManager.getListOfAllDecks().size()) {
-                collectionManager.setCurrentDeck(collectionManager.getListOfAllDecks().get( userInputToInt - 1 ));
+            if (0 < userInputToInt && userInputToInt <= collectionManager.getCurrentSubject().getListOfDecks().size()) {
+                collectionManager.setCurrentDeck(collectionManager.getCurrentSubject().getListOfDecks().get( userInputToInt - 1 ));
                 this.currentPage = DECK_PAGE;
             } else {
                 menu.askUserToRetryInput("Sorry, the given number is out of bounds.");
@@ -135,6 +148,7 @@ public class FlashcardApplication {
                 menu.askUserToRetryInput("Sorry, the input could not be read. Please try again.");
             }
         }
+         */
     }
 
     private void makeANewDeckPage() {
@@ -144,7 +158,7 @@ public class FlashcardApplication {
         Deck deckToAdd = new Deck(newDeckName, 1);
 
         collectionManager.setCurrentDeck(deckToAdd);
-        collectionManager.addDeckToListOfAllDecks( collectionManager.getCurrentDeck() );
+        collectionManager.getCurrentSubject().addDeck(collectionManager.getCurrentDeck() );
         collectionManager.saveData();
 
         currentPage = DECK_PAGE;

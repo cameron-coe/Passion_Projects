@@ -5,6 +5,7 @@ import main.java.model.Flashcard;
 import main.java.model.GameDataDto;
 import main.java.model.Subject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CollectionManager {
@@ -20,6 +21,8 @@ public class CollectionManager {
 
     // Constructor
     public CollectionManager() {
+        this.subjectList = new ArrayList<>();
+
         saveAndLoadObject = new SaveAndLoad();
         this.saveAndLoadObject.loadSaveData();
     }
