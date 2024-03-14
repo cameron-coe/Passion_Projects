@@ -1,5 +1,6 @@
 package main.java.view.gui;
 
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -11,7 +12,7 @@ public class Gui {
      */
     private JFrame jFrame;
     private JPanel jPanel;
-    private DrawShapes drawShapes;
+    private GuiDraw guiDraw;
 
     /*******************************************************************************************************************
      * Constructor
@@ -19,7 +20,7 @@ public class Gui {
     public Gui () {
         jFrame = new JFrame();
         jPanel = new JPanel();
-        drawShapes = new DrawShapes();
+        guiDraw = new GuiDraw();
 
         Border border = BorderFactory.createEmptyBorder(30, 30, 10, 30);
         jPanel.setBorder(border);
@@ -39,25 +40,14 @@ public class Gui {
     private void windowSettings() {
         jFrame.setTitle("Flashcard App");
         //TODO: Set icon image
-        drawBackground();
         jFrame.setPreferredSize(new Dimension(800, 450));
 
     }
 
-    private void drawBackground () {
-        Color color = new java.awt.Color(255, 236, 222);
-        jPanel.setBackground(color);
-        jFrame.getContentPane().add(jPanel);
-        drawRect();
+    public void renderAll () {
+        //drawRect();
+        jFrame.getContentPane().add(guiDraw);
     }
-
-    private void drawRect () {
-        drawShapes.drawRect(100, 180, 260, 100);
-        drawShapes.setFillColor(Color.green);
-        drawShapes.drawRect(200, 150, 60, 200);
-        jFrame.getContentPane().add(drawShapes);
-    }
-
 
 
 }

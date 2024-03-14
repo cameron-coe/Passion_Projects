@@ -4,7 +4,7 @@ import main.java.model.Deck;
 import main.java.model.Flashcard;
 import main.java.model.quizzes.MultipleChoiceQuiz;
 import main.java.model.quizzes.ReviewQuiz;
-import main.java.view.FlashcardMenu;
+import main.java.view.CLIMenu;
 import main.java.view.gui.Gui;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public class FlashcardApplication {
     /*******************************************************************************************************************
      * Instance Variables
      */
-    private FlashcardMenu menu;
+    private CLIMenu menu;
     private Gui gui;
     private CollectionManager collectionManager;
     private String currentPage = HOMEPAGE;
@@ -54,7 +54,7 @@ public class FlashcardApplication {
      * Main Method
      */
     public static void main(String[] args) {
-        //FlashcardMenu menu = new FlashcardMenu();
+        //CLIMenu menu = new CLIMenu();
         Gui gui = new Gui();
         CollectionManager collectionManager = new CollectionManager();
 
@@ -79,6 +79,7 @@ public class FlashcardApplication {
      */
     public void run () {
         collectionManager.loadData();
+        gui.drawAll();
         //menu.showWelcomeScreen();
 
 
@@ -126,6 +127,7 @@ public class FlashcardApplication {
      * Methods for different pages
      */
     private void homepage() {
+
 
         /*
         menu.showHomepage(collectionManager.getCurrentSubject().getListOfDecks());

@@ -6,7 +6,7 @@ import main.java.model.Flashcard;
 import java.util.List;
 import java.util.Scanner;
 
-public class FlashcardMenu {
+public class CLIMenu {
 
     // Constants
     private final static char BLOCK = '■';
