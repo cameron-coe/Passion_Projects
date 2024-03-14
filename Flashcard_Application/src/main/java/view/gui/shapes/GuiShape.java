@@ -2,7 +2,7 @@ package main.java.view.gui.shapes;
 
 import java.awt.*;
 
-public abstract class Shape {
+public abstract class GuiShape {
     private int xPos = 0;
     private int yPos = 0;
     private int width = 100;
@@ -11,7 +11,17 @@ public abstract class Shape {
     private  Color outlineColor = Color.BLUE;
 
 
-    // Getters and Setters
+    /*******************************************************************************************************************
+     * Constructor
+     */
+    public GuiShape() {
+
+    }
+
+
+    /*******************************************************************************************************************
+     * Getters and Setters
+     */
     public int getXPos() {
         return xPos;
     }

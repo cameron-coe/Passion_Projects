@@ -52,6 +52,9 @@ public class Gui {
     }
 
     private void drawRect () {
+        drawShapes.drawRect(100, 180, 260, 100);
+        drawShapes.setFillColor(Color.green);
+        drawShapes.drawRect(200, 150, 60, 200);
         jFrame.getContentPane().add(drawShapes);
     }
 
