@@ -44,7 +44,7 @@ public class FlashcardApplication {
     /*******************************************************************************************************************
      * Instance Variables
      */
-    private CLIMenu menu;
+    private CLIMenu cliMenu;
     private Gui gui;
     private CollectionManager collectionManager;
     private String currentPage = HOMEPAGE;
@@ -79,7 +79,7 @@ public class FlashcardApplication {
      */
     public void run () {
         collectionManager.loadData();
-        gui.drawAll();
+        //gui.renderAll();
         //menu.showWelcomeScreen();
 
 
@@ -154,9 +154,9 @@ public class FlashcardApplication {
     }
 
     private void makeANewDeckPage() {
-        menu.showNewDeckPage();
+        cliMenu.showNewDeckPage();
 
-        String newDeckName = menu.requestUserInput();
+        String newDeckName = cliMenu.requestUserInput();
         Deck deckToAdd = new Deck(newDeckName, 1);
 
         collectionManager.setCurrentDeck(deckToAdd);
@@ -167,9 +167,9 @@ public class FlashcardApplication {
     }
 
     private void currentDeckPage() {
-        menu.showDeckPage(collectionManager.getCurrentDeck());
+        cliMenu.showDeckPage(collectionManager.getCurrentDeck());
 
-        String userInput = menu.requestUserInputAndFormat();
+        String userInput = cliMenu.requestUserInputAndFormat();
 
         if (userInput.equals("h")) {
             // Go to homepage
@@ -197,21 +197,21 @@ public class FlashcardApplication {
                 currentPage = ALL_FLASHCARDS_IN_DECK_PAGE;
 
             } else {
-                menu.askUserToRetryInput("Sorry, the input could not be read. Please try again.");
+                cliMenu.askUserToRetryInput("Sorry, the input could not be read. Please try again.");
             }
         } else {
-            menu.askUserToRetryInput("Sorry, the input could not be read. Please try again.");
+            cliMenu.askUserToRetryInput("Sorry, the input could not be read. Please try again.");
         }
     }
 
     private void newFlashcardPage() {
-        this.menu.showNewFlashcardPage();
+        this.cliMenu.showNewFlashcardPage();
 
-        menu.askUserToInputFlashcardFront();
-        String flashcardFront = menu.requestUserInput();
+        cliMenu.askUserToInputFlashcardFront();
+        String flashcardFront = cliMenu.requestUserInput();
 
-        menu.askUserToInputFlashcardBack();
-        String flashcardBack = menu.requestUserInput();
+        cliMenu.askUserToInputFlashcardBack();
+        String flashcardBack = cliMenu.requestUserInput();
 
         Flashcard flashcardToAdd = new Flashcard(flashcardFront, flashcardBack);
         collectionManager.addFlashCardToCurrentDeck(flashcardToAdd);
@@ -221,7 +221,7 @@ public class FlashcardApplication {
     }
 
     private void editFlashcardPage() {
-        menu.showEditFlashcardPage();
+        cliMenu.showEditFlashcardPage();
 
         editFlashCard(collectionManager.getCurrentFlashcard());
 
@@ -230,14 +230,14 @@ public class FlashcardApplication {
     }
 
     private void editFlashCard(Flashcard flashcardToUpdate) {
-        menu.askUserToUpdateFlashcardFront(flashcardToUpdate);
-        String newFlashcardFront = menu.requestUserInput();
+        cliMenu.askUserToUpdateFlashcardFront(flashcardToUpdate);
+        String newFlashcardFront = cliMenu.requestUserInput();
         if(!newFlashcardFront.trim().equals("")) {
             flashcardToUpdate.setFront(newFlashcardFront);
         }
 
-        menu.askUserToUpdateFlashcardBack(flashcardToUpdate);
-        String newFlashcardBack = menu.requestUserInput();
+        cliMenu.askUserToUpdateFlashcardBack(flashcardToUpdate);
+        String newFlashcardBack = cliMenu.requestUserInput();
         if(!newFlashcardBack.trim().equals("")) {
             flashcardToUpdate.setBack(newFlashcardBack);
         }
@@ -246,8 +246,8 @@ public class FlashcardApplication {
     }
 
     private void deleteDeckPage() {
-        menu.showDeleteDeckPage( collectionManager.getCurrentDeck() );
-        boolean deleteDeck = menu.requestUserInputAndFormat().equals("y");
+        cliMenu.showDeleteDeckPage( collectionManager.getCurrentDeck() );
+        boolean deleteDeck = cliMenu.requestUserInputAndFormat().equals("y");
         if (deleteDeck) {
             collectionManager.deleteCurrentDeck();
             collectionManager.saveData();
@@ -258,8 +258,8 @@ public class FlashcardApplication {
     }
 
     private void renameCurrentDeckPage(){
-        menu.showRenameDeckPage(collectionManager.getCurrentDeck());
-        String newDeckName = menu.requestUserInput();
+        cliMenu.showRenameDeckPage(collectionManager.getCurrentDeck());
+        String newDeckName = cliMenu.requestUserInput();
         collectionManager.getCurrentDeck().setDeckName( newDeckName );
         currentPage = DECK_PAGE;
 
@@ -267,8 +267,8 @@ public class FlashcardApplication {
     }
 
     private void lookAtFlashcardsInDeckPage(){
-        menu.showAllFlashcardsInDeckPage( collectionManager.getCurrentDeck() );
-        String userInput = menu.requestUserInputAndFormat();
+        cliMenu.showAllFlashcardsInDeckPage( collectionManager.getCurrentDeck() );
+        String userInput = cliMenu.requestUserInputAndFormat();
 
         // Go to selected flashcard if we can parse user input to an int, otherwise check for other input command
         try{
@@ -277,22 +277,22 @@ public class FlashcardApplication {
                 collectionManager.setCurrentFlashcard(collectionManager.getCurrentDeck().getFlashcardsInDeck().get( userInputToInt - 1 ));
                 currentPage = FLASHCARD_PAGE;
             } else {
-                menu.askUserToRetryInput("Sorry, the given number is out of bounds.");
+                cliMenu.askUserToRetryInput("Sorry, the given number is out of bounds.");
             }
 
         } catch (NumberFormatException e) {
             if (userInput.equals("b")) {
                 currentPage = DECK_PAGE;
             } else {
-                menu.askUserToRetryInput("Sorry, the input could not be read. Please try again.");
+                cliMenu.askUserToRetryInput("Sorry, the input could not be read. Please try again.");
             }
         }
     }
 
     private void currentFlashcardPage() {
-        menu.showFlashcardPage( collectionManager.getCurrentFlashcard() );
+        cliMenu.showFlashcardPage( collectionManager.getCurrentFlashcard() );
 
-        String userInput = menu.requestUserInputAndFormat();
+        String userInput = cliMenu.requestUserInputAndFormat();
         if(userInput.equals("e")) {
             // Edit Flashcard
             currentPage = EDIT_FLASHCARD_PAGE;
@@ -317,9 +317,9 @@ public class FlashcardApplication {
      * Quizzes, quizzes, and more quizzes!
      */
     private void quizzesPage() {
-        menu.showQuizzesPage();
+        cliMenu.showQuizzesPage();
 
-        String userInput = menu.requestUserInputAndFormat();
+        String userInput = cliMenu.requestUserInputAndFormat();
 
         int quizScore = 0;
         List<Flashcard> allFlashcardsInCurrentDeck = collectionManager.getCurrentDeck().getFlashcardsInDeck();
@@ -338,11 +338,11 @@ public class FlashcardApplication {
             // Loop the quiz
             while (reviewQuiz.getNumberOfCardsInQuiz() > 0) {
                 Flashcard currentQuizCard = reviewQuiz.pullCardOutOfQuizCardsList();
-                menu.introToQuestion(currentQuizCard, quizScore);
-                menu.showReviewQuestion();
-                menu.requestUserInput();
-                menu.showReviewAnswer(currentQuizCard, quizScore);
-                userInput = menu.requestUserInputAndFormat();
+                cliMenu.introToQuestion(currentQuizCard, quizScore);
+                cliMenu.showReviewQuestion();
+                cliMenu.requestUserInput();
+                cliMenu.showReviewAnswer(currentQuizCard, quizScore);
+                userInput = cliMenu.requestUserInputAndFormat();
                 if (userInput.equals("r")) {
                     // Put the card back in the deck for review
                     reviewQuiz.putPulledCardBackIntoQuizCardsList();
@@ -352,12 +352,12 @@ public class FlashcardApplication {
                     editFlashCard(collectionManager.getCurrentDeck().getMatchingFlashcard(currentQuizCard));
                     reviewQuiz.putPulledCardBackIntoQuizCardsList();
                     quizScore += 1; // You get a point for editing a card
-                    menu.cardRevisionMessage();
+                    cliMenu.cardRevisionMessage();
                 }
                 else {
                     // getting the right answer
                     quizScore += currentQuizCard.getPoints();
-                    menu.correctMessage();
+                    cliMenu.correctMessage();
                 }
             }
         }
@@ -377,37 +377,37 @@ public class FlashcardApplication {
                 // Loop the quiz
                 while (multipleChoiceQuiz.getNumberOfCardsInQuiz() >= 4) {
                     Flashcard currentQuizCard = multipleChoiceQuiz.pullCardOutOfQuizCardsList();
-                    menu.introToQuestion(currentQuizCard, quizScore);
-                    menu.showMultipleChoiceQuestion(multipleChoiceQuiz.getAnswerOptions());
-                    String userAnswer = menu.requestUserInputAndFormat();
+                    cliMenu.introToQuestion(currentQuizCard, quizScore);
+                    cliMenu.showMultipleChoiceQuestion(multipleChoiceQuiz.getAnswerOptions());
+                    String userAnswer = cliMenu.requestUserInputAndFormat();
                     if (multipleChoiceQuiz.checkAnswer(userAnswer)) {
                         // Getting the right answer
                         quizScore += currentQuizCard.getPoints();
-                        menu.correctMessage();
+                        cliMenu.correctMessage();
                     }
                     else if (userAnswer.equals("e")) {
                         //Edit the flashcard and put it back in the deck
                         editFlashCard(collectionManager.getCurrentDeck().getMatchingFlashcard(currentQuizCard));
                         multipleChoiceQuiz.putPulledCardBackIntoQuizCardsList();
                         quizScore += 1; // You get a point for editing a card
-                        menu.cardRevisionMessage();
+                        cliMenu.cardRevisionMessage();
                     }
                     else {
                         // Getting the wrong answer
                         multipleChoiceQuiz.putPulledCardBackIntoQuizCardsList();
-                        menu.incorrectMessage(currentQuizCard);
+                        cliMenu.incorrectMessage(currentQuizCard);
                     }
                 }
             } else {
-                menu.askUserToRetryInput("Sorry, you need at least 4 cards in this deck to do a multiple choice quiz.");
+                cliMenu.askUserToRetryInput("Sorry, you need at least 4 cards in this deck to do a multiple choice quiz.");
             }
         }
 
         else {
-            menu.askUserToRetryInput("Sorry, the input could not be read. Please try again.");
+            cliMenu.askUserToRetryInput("Sorry, the input could not be read. Please try again.");
         }
 
-        menu.endQuizMessage(quizScore);
+        cliMenu.endQuizMessage(quizScore);
         currentPage = DECK_PAGE;
     }
 

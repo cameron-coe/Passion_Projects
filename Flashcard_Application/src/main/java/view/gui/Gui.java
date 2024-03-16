@@ -2,51 +2,102 @@ package main.java.view.gui;
 
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Gui {
+public class Gui extends JFrame {
 
     /*******************************************************************************************************************
-     * Instance Variables
+     *Constants
      */
-    private JFrame jFrame;
-    private JPanel jPanel;
-    private GuiDraw guiDraw;
+    private final static Color BACKGROUND_COLOR = new Color(255, 222, 191);
 
-    /*******************************************************************************************************************
-     * Constructor
-     */
-    public Gui () {
-        jFrame = new JFrame();
-        jPanel = new JPanel();
-        guiDraw = new GuiDraw();
 
-        Border border = BorderFactory.createEmptyBorder(30, 30, 10, 30);
-        jPanel.setBorder(border);
-        jPanel.setLayout(new GridLayout(0, 1));
+    private JLabel positionLabel;
+    private BufferedImage bufferedImage;
+    private int x = 0;
+    private int y = 0;
 
-        jFrame.add(jPanel, BorderLayout.CENTER);
+    public Gui() {
+        super("Mouse Position Tracker");
 
-        // Ends the program when the gui window closes
-        jFrame.setDefaultCloseOperation(jFrame.EXIT_ON_CLOSE);
+        positionLabel = new JLabel("Mouse Position: ");
+        positionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        positionLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+
+        add(positionLabel, BorderLayout.NORTH);
 
         windowSettings();
-        jFrame.pack();
-        jFrame.setVisible(true);
 
+        addListeners();
     }
 
+    @Override
+    public void paint(Graphics graphics) {
+        List<GuiShape> testList = new ArrayList<>();
+        GuiShape testRect = GuiShape.makeGuiRoundedRectangle(x, y, 200, 200, 30);
+        testRect.setFillColor(Color.white);
+        testRect.setOutlineColor(new Color(0,0,0,0));
+        testRect.setOutlineWidth(5);
+        testList.add(testRect);
+
+        String longString = "The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog.";
+        GuiShape testTextBox = GuiShape.makeGuiTextBox(longString, x, y, 200, 200);
+        testTextBox.setTextFillColor( Color.black );
+        testList.add(testTextBox);
+
+        DrawGraphics draw = new DrawGraphics(bufferedImage, this, testList);
+        draw.prepareBufferedGraphic();
+        graphics.drawImage(draw.getBufferedImage(), 0, 0, null);
+    }
+
+    /*******************************************************************************************************************
+     * Gui Settings
+     */
     private void windowSettings() {
-        jFrame.setTitle("Flashcard App");
+
         //TODO: Set icon image
-        jFrame.setPreferredSize(new Dimension(800, 450));
+        setSize(800, 450);
+        setTitle("Flashcard App");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //setLocationRelativeTo(null); // Center the frame
+
+        // Create buffer
+        bufferedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+        setVisible(true);
 
     }
 
-    public void renderAll () {
-        //drawRect();
-        jFrame.getContentPane().add(guiDraw);
+
+    /*******************************************************************************************************************
+     * Listener Events
+     */
+    private void addListeners() {
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                x = e.getX();
+                y = e.getY();
+                positionLabel.setText("Mouse Position: (" + x + ", " + y + ")");
+                repaint();
+            }
+        });
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                int width = getWidth();
+                int height = getHeight();
+                bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            }
+        });
     }
 
 
