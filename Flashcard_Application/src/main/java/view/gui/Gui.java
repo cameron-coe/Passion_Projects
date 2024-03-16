@@ -41,16 +41,24 @@ public class Gui extends JFrame {
     @Override
     public void paint(Graphics graphics) {
         List<GuiShape> testList = new ArrayList<>();
-        GuiShape testRect = GuiShape.makeGuiRoundedRectangle(x, y, 200, 200, 30);
+        GuiShape testRect = GuiShape.makeRoundedRectangle(x, y, 200, 200, 30);
         testRect.setFillColor(Color.white);
         testRect.setOutlineColor(new Color(0,0,0,0));
         testRect.setOutlineWidth(5);
         testList.add(testRect);
 
+        GuiShape textLines = GuiShape.makeTextBoxLines(x, y, 200, 200);
+        textLines.setOutlineWidth(1);
+        textLines.setOutlineColor(new Color(0,0,0, 50));
+        testList.add(textLines);
+
         String longString = "The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog.";
-        GuiShape testTextBox = GuiShape.makeGuiTextBox(longString, x, y, 200, 200);
+        GuiShape testTextBox = GuiShape.makeTextBox(longString, x, y, 200, 200);
         testTextBox.setTextFillColor( Color.black );
         testList.add(testTextBox);
+        testTextBox.setTextFillColor( Color.blue );
+
+
 
         DrawGraphics draw = new DrawGraphics(bufferedImage, this, testList);
         draw.prepareBufferedGraphic();

@@ -73,6 +73,9 @@ public class DrawGraphics {
             else if (shape.getShapeId() == GuiShape.TEXT_BOX) {
                 drawTextBox(shape);
             }
+            else if (shape.getShapeId() == GuiShape.TEXT_BOX_LINES) {
+                drawTextBoxLines(shape);
+            }
 
         }
     }
@@ -171,7 +174,7 @@ public class DrawGraphics {
         String currentLine = "";
 
         for (String word : words) {
-            // Check if adding this word makes the current exceed the maximum width
+            // Check if adding this word makes the current line exceed the maximum width
             // I'm adding two spaces because it checks for a line slightly longer than the actual line,
             // that prevents flickering text
             if (fontMetrics.stringWidth(currentLine + " " + " " + word) > width) {
@@ -194,8 +197,12 @@ public class DrawGraphics {
                     // Clear the current line
                     currentLine = "";
 
-                    // Don't show lines that go past the bottom bounds
-                    if (startY > shape.getPoint2Y()) {
+                    // get bottom of the last line
+                    int textBottom = startY - fontMetrics.getAscent();
+                    textBottom += fontMetrics.getHeight();
+
+                    // Don't show lines that go past the bottom bound
+                    if (textBottom > shape.getPoint2Y()) {
                         break;
                     }
 
@@ -211,6 +218,26 @@ public class DrawGraphics {
             //Center the last line
             int lineStartX = startX + (width - fontMetrics.stringWidth(currentLine)) / 2;
             bufferedGraphics2D.drawString(currentLine, lineStartX, startY);
+        }
+    }
+
+    private void drawTextBoxLines(GuiShape shape) {
+        int startX = shape.getPoint1X();
+        int startY = shape.getPoint1Y();
+        int endX = shape.getPoint2X();
+        int endY = shape.getPoint2Y();
+
+        // Get metrics about the font
+        FontMetrics fontMetrics = bufferedGraphics2D.getFontMetrics();
+        int fontHeight = fontMetrics.getHeight();
+
+        // Make the lines start at the bottom of the text
+        startY += fontMetrics.getAscent();
+
+        for (int i = startY; i < endY; i += fontHeight) {
+            shape.setPoint1Y(i);
+            shape.setPoint2Y(i);
+            drawLine(shape);
         }
     }
 

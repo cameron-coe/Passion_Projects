@@ -14,6 +14,7 @@ public class GuiShape {
     public final static int ROUNDED_RECTANGLE = 3;
     public final static int LINE = 4;
     public final static int TEXT_BOX = 5;
+    public final static int TEXT_BOX_LINES = 6;
 
 
     /*******************************************************************************************************************
@@ -158,7 +159,7 @@ public class GuiShape {
      * Make Shapes
      */
 
-    static GuiShape makeGuiRectangle(int point1X, int point1Y, int point2X, int point2Y) {
+    static GuiShape makeRectangle(int point1X, int point1Y, int point2X, int point2Y) {
         GuiShape newShape = new GuiShape();
         newShape.shapeId = RECTANGLE;
 
@@ -183,22 +184,22 @@ public class GuiShape {
         return newShape;
     }
 
-    static GuiShape makeGuiEllipse(int point1X, int point1Y, int point2X, int point2Y) {
-        GuiShape newShape = GuiShape.makeGuiRectangle(point1X, point1Y, point2X, point2Y);
+    static GuiShape makeEllipse(int point1X, int point1Y, int point2X, int point2Y) {
+        GuiShape newShape = GuiShape.makeRectangle(point1X, point1Y, point2X, point2Y);
         newShape.setShapeId(GuiShape.ELLIPSE);
 
         return newShape;
     }
 
-    static GuiShape makeGuiRoundedRectangle(int point1X, int point1Y, int point2X, int point2Y, int arc) {
-        GuiShape newShape = GuiShape.makeGuiRectangle(point1X, point1Y, point2X, point2Y);
+    static GuiShape makeRoundedRectangle(int point1X, int point1Y, int point2X, int point2Y, int arc) {
+        GuiShape newShape = GuiShape.makeRectangle(point1X, point1Y, point2X, point2Y);
         newShape.setShapeId(GuiShape.ROUNDED_RECTANGLE);
         newShape.setArc(arc);
 
         return newShape;
     }
 
-    static GuiShape makeGuiLine(int point1X, int point1Y, int point2X, int point2Y) {
+    static GuiShape makeLine(int point1X, int point1Y, int point2X, int point2Y) {
         GuiShape newShape = new GuiShape();
         newShape.setShapeId(GuiShape.LINE);
 
@@ -210,10 +211,17 @@ public class GuiShape {
         return newShape;
     }
 
-    static GuiShape makeGuiTextBox(String text, int point1X, int point1Y, int point2X, int point2Y) {
-        GuiShape newShape = GuiShape.makeGuiRectangle(point1X, point1Y, point2X, point2Y);
+    static GuiShape makeTextBox(String text, int point1X, int point1Y, int point2X, int point2Y) {
+        GuiShape newShape = GuiShape.makeRectangle(point1X, point1Y, point2X, point2Y);
         newShape.setShapeId(GuiShape.TEXT_BOX);
         newShape.setText(text);
+
+        return newShape;
+    }
+
+    static GuiShape makeTextBoxLines(int point1X, int point1Y, int point2X, int point2Y) {
+        GuiShape newShape = GuiShape.makeRectangle(point1X, point1Y, point2X, point2Y);
+        newShape.setShapeId(GuiShape.TEXT_BOX_LINES);
 
         return newShape;
     }
