@@ -4,7 +4,7 @@ import main.java.model.Deck;
 import main.java.model.Flashcard;
 import main.java.model.quizzes.MultipleChoiceQuiz;
 import main.java.model.quizzes.ReviewQuiz;
-import main.java.view.CLIMenu;
+import main.java.view.CliMenu;
 import main.java.view.gui.Gui;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public class FlashcardApplication {
     /*******************************************************************************************************************
      * Instance Variables
      */
-    private CLIMenu cliMenu;
+    private CliMenu cliMenu;
     private Gui gui;
     private CollectionManager collectionManager;
     private String currentPage = HOMEPAGE;
@@ -54,11 +54,11 @@ public class FlashcardApplication {
      * Main Method
      */
     public static void main(String[] args) {
-        //CLIMenu menu = new CLIMenu();
+        CliMenu cliMenu = new CliMenu();
         Gui gui = new Gui();
         CollectionManager collectionManager = new CollectionManager();
 
-        FlashcardApplication app = new FlashcardApplication(gui, collectionManager);
+        FlashcardApplication app = new FlashcardApplication(gui, cliMenu, collectionManager);
         app.run();
     }
 
@@ -66,8 +66,8 @@ public class FlashcardApplication {
     /*******************************************************************************************************************
      * Constructor
      */
-    public FlashcardApplication (Gui gui, CollectionManager collectionManager) {
-        // this.menu = menu;
+    public FlashcardApplication (Gui gui, CliMenu cliMenu, CollectionManager collectionManager) {
+        this.cliMenu = cliMenu;
         this.gui = gui;
         this.collectionManager = collectionManager;
         this.currentPage = HOMEPAGE;
@@ -79,8 +79,7 @@ public class FlashcardApplication {
      */
     public void run () {
         collectionManager.loadData();
-        //gui.renderAll();
-        //menu.showWelcomeScreen();
+        cliMenu.showWelcomeScreen();
 
 
         boolean isRunning = true;
@@ -127,11 +126,33 @@ public class FlashcardApplication {
      * Methods for different pages
      */
     private void homepage() {
-
-
+        //gui.guiHomepage(collectionManager.getSubjectList());
         /*
-        menu.showHomepage(collectionManager.getCurrentSubject().getListOfDecks());
-        String userInput = menu.requestUserInputAndFormat();
+        cliMenu.showHomepage(collectionManager.getSubjectList());
+        String userInput = cliMenu.requestUserInputAndFormat();
+
+        try{
+            int userInputToInt = Integer.parseInt(userInput);
+            if (0 < userInputToInt && userInputToInt <= collectionManager.getSubjectList().size()) {
+                collectionManager.setCurrentSubject(collectionManager.getSubjectList().get( userInputToInt - 1 ));
+                //this.currentPage = SUBJECT_PAGE;
+            } else {
+                cliMenu.askUserToRetryInput("Sorry, the given number is out of bounds.");
+            }
+
+        } catch (NumberFormatException e) {
+            if (userInput.equals("n")) {
+                //currentPage = NEW_SUBJECT_PAGE;
+            } else {
+                cliMenu.askUserToRetryInput("Sorry, the input could not be read. Please try again.");
+            }
+        } */
+
+
+
+        /**  -Decks Page
+        cliMenu.showHomepage(collectionManager.getCurrentSubject().getListOfDecks());
+        String userInput = cliMenu.requestUserInputAndFormat();
 
         // Go to selected deck if we can parse user input to an int, otherwise check for other input command
         try{
@@ -140,17 +161,17 @@ public class FlashcardApplication {
                 collectionManager.setCurrentDeck(collectionManager.getCurrentSubject().getListOfDecks().get( userInputToInt - 1 ));
                 this.currentPage = DECK_PAGE;
             } else {
-                menu.askUserToRetryInput("Sorry, the given number is out of bounds.");
+                cliMenu.askUserToRetryInput("Sorry, the given number is out of bounds.");
             }
 
         } catch (NumberFormatException e) {
             if (userInput.equals("n")) {
                 currentPage = NEW_DECK_PAGE;
             } else {
-                menu.askUserToRetryInput("Sorry, the input could not be read. Please try again.");
+                cliMenu.askUserToRetryInput("Sorry, the input could not be read. Please try again.");
             }
         }
-         */
+        */
     }
 
     private void makeANewDeckPage() {

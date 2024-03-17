@@ -22,8 +22,8 @@ public class CollectionManager {
     // Constructor
     public CollectionManager() {
         this.subjectList = new ArrayList<>();
+        this.saveAndLoadObject = new SaveAndLoad();
 
-        saveAndLoadObject = new SaveAndLoad();
         this.saveAndLoadObject.loadSaveData();
     }
 

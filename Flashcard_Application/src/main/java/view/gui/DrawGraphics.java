@@ -45,9 +45,10 @@ public class DrawGraphics {
      * Render - applies list of shapes to the Graphics
      */
     public void prepareBufferedGraphic() {
-        // Enable anti-aliasing - makes images smoother and less jagged
+        // Enable antialiasing - makes images smoother and less jagged
         bufferedGraphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         bufferedGraphics2D.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+
         drawBackground();
         drawAllShapes();
     }
@@ -154,7 +155,6 @@ public class DrawGraphics {
         int startX = shape.getPoint1X();
         int startY = shape.getPoint1Y();
         int width = shape.getPoint2X() - shape.getPoint1X();
-        int height = shape.getPoint2Y() - shape.getPoint1Y();
         String text = shape.getText();
 
         // Get metrics about the font
@@ -182,11 +182,30 @@ public class DrawGraphics {
                 // If the line without the added word is smaller than the box width, draw it
                 if (fontMetrics.stringWidth(currentLine) <= width) {
 
+
+
+
+
+                    // Set scaling factors
+                    double scaleX = 0.5; // Change this value as needed
+                    double scaleY = 1; // Keep the scale factor for y-axis as 1.0
+
                     //Center the lines
-                    int lineStartX = startX + (width - fontMetrics.stringWidth(currentLine)) / 2;
+                    int lineStartX = (startX + (width - fontMetrics.stringWidth(currentLine)) / 2);
+
+                    //Centers line applying the scale
+
+                    // Apply scaling to the graphics object
+                    bufferedGraphics2D.scale(scaleX, scaleY);
+
+
+
 
                     // Draw the current line
                     bufferedGraphics2D.drawString(currentLine, lineStartX, startY);
+
+                    // Undo Scaling
+                    bufferedGraphics2D.scale(1/scaleX, 1/scaleY);
 
                     // Increase startY to move down the next currentLine
                     // only if the line drawn had text
@@ -222,9 +241,7 @@ public class DrawGraphics {
     }
 
     private void drawTextBoxLines(GuiShape shape) {
-        int startX = shape.getPoint1X();
         int startY = shape.getPoint1Y();
-        int endX = shape.getPoint2X();
         int endY = shape.getPoint2Y();
 
         // Get metrics about the font

@@ -2,11 +2,12 @@ package main.java.view;
 
 import main.java.model.Deck;
 import main.java.model.Flashcard;
+import main.java.model.Subject;
 
 import java.util.List;
 import java.util.Scanner;
 
-public class CLIMenu {
+public class CliMenu {
 
     // Constants
     private final static char BLOCK = '■';
@@ -47,16 +48,34 @@ public class CLIMenu {
     }
 
 
+    /*******************************************************************************************************************
+     * Displays for Application
+     */
     public void showWelcomeScreen() {
         drawHeading("Welcome to the Flashcard App!");
     }
 
-
-    public void showHomepage(List<Deck> listOfAllDecksFromAllDecksManager) {
+    public void showHomepage(List<Subject> subjects) {
         drawHeading("Homepage");
 
-        if (listOfAllDecksFromAllDecksManager.size() == 0) {
-            System.out.println("You don't have any decks. Type \"N\" to create a new deck.");
+        if (subjects.isEmpty()) {
+            System.out.println("You don't have any subjects yet. Type \"N\" to create a new one.");
+        } else {
+            System.out.println("Type an integer to select a deck, or \"N\" to create a new subject.");
+
+            for (int i = 0; i < subjects.size(); i++) {
+                System.out.println("" + (i + 1) + ".) -- " + subjects.get(i).getName());
+            }
+        }
+    }
+
+
+
+    public void showDecksPage(List<Deck> listOfAllDecksFromAllDecksManager) {
+        drawHeading("Homepage");
+
+        if (listOfAllDecksFromAllDecksManager.isEmpty()) {
+            System.out.println("You don't have any decks in this subject. Type \"N\" to create a new one.");
         } else {
             System.out.println("Type an integer to select a deck, or \"N\" to create a new deck.");
 

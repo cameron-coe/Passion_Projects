@@ -68,8 +68,8 @@ public class GuiShape {
         this.shapeId = shapeId;
     }
 
-    public void setPoint1X(int point1X) {
-        this.point1X = point1X;
+    public void setPoint1X(int newXValue) {
+        this.point1X = newXValue;
     }
 
     public void setPoint1Y(int point1Y) {
@@ -155,10 +155,30 @@ public class GuiShape {
         return text;
     }
 
+
+    /*******************************************************************************************************************
+     * HelperMethods
+     */
+    private void makePoint1XLessThanPoint2X() {
+        if (point1X > point2X) {
+            int placeholder = point1X;
+            point1X = point2X;
+            point2X = placeholder;
+        }
+    }
+
+    private void makePoint1YLessThanPoint2Y() {
+        if (point1Y > point2Y) {
+            int smallerValue = point2Y;
+            point2Y = point1Y;
+            point1Y = smallerValue;
+        }
+    }
+
+
     /*******************************************************************************************************************
      * Make Shapes
      */
-
     static GuiShape makeRectangle(int point1X, int point1Y, int point2X, int point2Y) {
         GuiShape newShape = new GuiShape();
         newShape.shapeId = RECTANGLE;
