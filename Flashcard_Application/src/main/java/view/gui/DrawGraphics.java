@@ -157,6 +157,10 @@ public class DrawGraphics {
         int width = shape.getPoint2X() - shape.getPoint1X();
         String text = shape.getText();
 
+        // Set scaling factors
+        double scaleX = shape.getTextScaleX(); // Change this value as needed
+        double scaleY = 1; // Keep the scale factor for y-axis as 1
+
         // Get metrics about the font
         FontMetrics fontMetrics = bufferedGraphics2D.getFontMetrics();
 
@@ -182,27 +186,16 @@ public class DrawGraphics {
                 // If the line without the added word is smaller than the box width, draw it
                 if (fontMetrics.stringWidth(currentLine) <= width) {
 
-
-
-
-
-                    // Set scaling factors
-                    double scaleX = 0.5; // Change this value as needed
-                    double scaleY = 1; // Keep the scale factor for y-axis as 1.0
-
-                    //Center the lines
-                    int lineStartX = (startX + (width - fontMetrics.stringWidth(currentLine)) / 2);
-
-                    //Centers line applying the scale
+                    //Center the lines (And adjusts for scaling)
+                    double lineStartX = ((double) startX) / scaleX;
+                    lineStartX -= ((double) fontMetrics.stringWidth(currentLine)) / 2;
+                    lineStartX += (width/scaleX) / 2;
 
                     // Apply scaling to the graphics object
                     bufferedGraphics2D.scale(scaleX, scaleY);
 
-
-
-
                     // Draw the current line
-                    bufferedGraphics2D.drawString(currentLine, lineStartX, startY);
+                    bufferedGraphics2D.drawString(currentLine, (int) lineStartX, startY);
 
                     // Undo Scaling
                     bufferedGraphics2D.scale(1/scaleX, 1/scaleY);
@@ -234,9 +227,19 @@ public class DrawGraphics {
 
         // Draws the last line if there's enough room in the box for it
         if (fontMetrics.stringWidth(currentLine) < width) {
-            //Center the last line
-            int lineStartX = startX + (width - fontMetrics.stringWidth(currentLine)) / 2;
-            bufferedGraphics2D.drawString(currentLine, lineStartX, startY);
+            //Center the lines (And adjusts for scaling)
+            double lineStartX = ((double) startX) / scaleX;
+            lineStartX -= (fontMetrics.stringWidth(currentLine)) / 2;
+            lineStartX += (width/scaleX) / 2;
+
+            // Apply scaling to the graphics object
+            bufferedGraphics2D.scale(scaleX, scaleY);
+
+            // Draw the final Line
+            bufferedGraphics2D.drawString(currentLine, (int) lineStartX, startY);
+
+            // Undo Scaling
+            bufferedGraphics2D.scale(1/scaleX, 1/scaleY);
         }
     }
 

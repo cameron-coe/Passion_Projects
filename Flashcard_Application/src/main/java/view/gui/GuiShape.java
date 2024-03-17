@@ -35,6 +35,7 @@ public class GuiShape {
 
     private int arc;
     private String text;
+    private double textScaleX;
 
 
     /*******************************************************************************************************************
@@ -68,6 +69,26 @@ public class GuiShape {
         this.shapeId = shapeId;
     }
 
+    public void setBounds(int point1X, int point1Y, int point2X, int point2Y) {
+        // Default values
+        this.setPoint1X(point1X);
+        this.setPoint1Y(point1Y);
+        this.setPoint2X(point2X);
+        this.setPoint2Y(point2Y);
+
+        //Makes sure the new Shape's point1X < point2X
+        if (point1X > point2X) {
+            this.setPoint1X(point2X);
+            this.setPoint2X(point1X);
+        }
+
+        //Makes sure the new Shape's point1Y < point2Y
+        if (point1Y > point2Y) {
+            this.setPoint1Y(point2Y);
+            this.setPoint2Y(point1Y);
+        }
+    }
+
     public void setPoint1X(int newXValue) {
         this.point1X = newXValue;
     }
@@ -98,6 +119,10 @@ public class GuiShape {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public void setTextScaleX(double textScaleX) {
+        this.textScaleX = textScaleX;
     }
 
     /*******************************************************************************************************************
@@ -155,24 +180,8 @@ public class GuiShape {
         return text;
     }
 
-
-    /*******************************************************************************************************************
-     * HelperMethods
-     */
-    private void makePoint1XLessThanPoint2X() {
-        if (point1X > point2X) {
-            int placeholder = point1X;
-            point1X = point2X;
-            point2X = placeholder;
-        }
-    }
-
-    private void makePoint1YLessThanPoint2Y() {
-        if (point1Y > point2Y) {
-            int smallerValue = point2Y;
-            point2Y = point1Y;
-            point1Y = smallerValue;
-        }
+    public double getTextScaleX() {
+        return textScaleX;
     }
 
 
@@ -183,23 +192,7 @@ public class GuiShape {
         GuiShape newShape = new GuiShape();
         newShape.shapeId = RECTANGLE;
 
-        // Default values
-        newShape.setPoint1X(point1X);
-        newShape.setPoint1Y(point1Y);
-        newShape.setPoint2X(point2X);
-        newShape.setPoint2Y(point2Y);
-
-        //Makes sure the new Shape's point1X < point2X
-        if (point1X > point2X) {
-            newShape.setPoint1X(point2X);
-            newShape.setPoint2X(point1X);
-        }
-
-        //Makes sure the new Shape's point1Y < point2Y
-        if (point1Y > point2Y) {
-            newShape.setPoint1Y(point2Y);
-            newShape.setPoint2Y(point1Y);
-        }
+        newShape.setBounds(point1X, point1Y, point2X, point2Y);
 
         return newShape;
     }
@@ -235,6 +228,7 @@ public class GuiShape {
         GuiShape newShape = GuiShape.makeRectangle(point1X, point1Y, point2X, point2Y);
         newShape.setShapeId(GuiShape.TEXT_BOX);
         newShape.setText(text);
+        newShape.setTextScaleX(1);
 
         return newShape;
     }

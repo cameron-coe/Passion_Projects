@@ -51,29 +51,6 @@ public class Gui extends JFrame {
      */
     @Override
     public void paint(Graphics graphics) {
-        /**
-        //List<GuiShape> testList = new ArrayList<>();
-        GuiShape testRect = GuiShape.makeRoundedRectangle(mouseX, mouseY, 200, 200, 30);
-        testRect.setFillColor(Color.white);
-        testRect.setOutlineColor(new Color(0,0,0,0));
-        testRect.setOutlineWidth(5);
-        shapesToDraw.add(testRect);
-
-        GuiShape textLines = GuiShape.makeTextBoxLines(mouseX, mouseY, 200, 200);
-        textLines.setOutlineWidth(1);
-        textLines.setOutlineColor(new Color(0,0,0, 30));
-        shapesToDraw.add(textLines);
-
-        String longString = "The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog.";
-        GuiShape testTextBox = GuiShape.makeTextBox(longString, mouseX, mouseY, 200, 200);
-        testTextBox.setTextFillColor( Color.black );
-        shapesToDraw.add(testTextBox);
-        testTextBox.setTextFillColor( Color.blue );
-        */
-
-
-
-
         DrawGraphics draw = new DrawGraphics(bufferedImage, this, shapesToDraw);
         draw.prepareBufferedGraphic();
         graphics.drawImage(draw.getBufferedImage(), 0, 0, null);
@@ -162,11 +139,11 @@ public class Gui extends JFrame {
     public void guiUpdate () {
         if (pageTitle != null ) {
             int indexOfPageTitle = shapesToDraw.indexOf(pageTitle);
-            System.out.println("LALALALALA " + indexOfPageTitle);
-            shapesToDraw.get(indexOfPageTitle).setPoint1X(mouseX);
+            System.out.println("LALALALALA " + shapesToDraw.size());
+            shapesToDraw.get(indexOfPageTitle).setBounds(mouseX, mouseY, 300, 300);
 
             int indexOfBox = shapesToDraw.indexOf(box);
-            shapesToDraw.get(indexOfBox).setPoint1X(mouseX);
+            shapesToDraw.get(indexOfBox).setBounds(mouseX, mouseY, 300, 300);
         }
     }
 
