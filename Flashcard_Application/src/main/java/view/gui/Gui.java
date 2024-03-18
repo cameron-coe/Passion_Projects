@@ -5,10 +5,7 @@ import main.java.model.Subject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +16,8 @@ public class Gui extends JFrame {
      * Constants
      */
     private final static Color BACKGROUND_COLOR = new Color(255, 222, 191);
+    private final static String HOMEPAGE = "homepage";
+
 
     /*******************************************************************************************************************
      * Instance Variables
@@ -30,20 +29,21 @@ public class Gui extends JFrame {
 
 
     /*******************************************************************************************************************
+     * Gui Elements
+     */
+    private GuiShape flashcard;
+    private GuiShape homepageTitle;
+
+
+    /*******************************************************************************************************************
      * Constructor
      */
     public Gui() {
         shapesToDraw = new ArrayList<>();
         windowSettings();
         addListeners();
-        makeHomepageTitle();
+        homepage();
     }
-
-
-    /*******************************************************************************************************************
-     * GuiShape List Methods
-     */
-
 
 
     /*******************************************************************************************************************
@@ -57,9 +57,10 @@ public class Gui extends JFrame {
     }
 
     /*******************************************************************************************************************
-     * Gui Settings
+     * Gui Window Settings
      */
     private void windowSettings() {
+        // JFrame is extended, so it's implied
         //TODO: Set icon image
         setSize(800, 450);
         setTitle("Flashcard App");
@@ -77,23 +78,33 @@ public class Gui extends JFrame {
      * Listener Events
      */
     private void addListeners() {
+        // When mouse is moved
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 mouseX = e.getX();
                 mouseY = e.getY();
                 guiUpdate();
-
-                repaint();
             }
         });
 
+        // When Window is Resized
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 int width = getWidth();
                 int height = getHeight();
                 bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                guiUpdate();
+            }
+        });
+
+        // When window first opens
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                guiUpdate();
+                repaint();
             }
         });
     }
@@ -103,48 +114,43 @@ public class Gui extends JFrame {
      * Menu Displays
      */
 
-    public void guiHomepage(List<Subject> subjects) {
-        String longString = "The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog.";
-        GuiShape testTextBox = GuiShape.makeTextBox(longString, mouseX, mouseY, 200, 200);
-        shapesToDraw.add(testTextBox);
-        testTextBox.setTextFillColor( Color.blue );
-        System.out.println(shapesToDraw.size());
-
+    private void homepage() {
+        homepageTitle();
+        //shapesToDraw.add(pageTitle);
     }
 
+    private void homepageTitle() {
+        int leftSpacing = 10;
+        int rightSpacing = getWidth() - leftSpacing - 7;
 
-    /*******************************************************************************************************************
-     * Gui Elements
-     */
-    private GuiShape box;
-    private GuiShape pageTitle;
-    private void makeHomepageTitle() {
-
-        box = GuiShape.makeRoundedRectangle(mouseX, mouseY, 400, 200, 25);
-        box.setFillColor(Color.WHITE);
-        shapesToDraw.add(box);
-
-        String longString = "The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog.";
-        GuiShape testTextBox = GuiShape.makeTextBox(longString, mouseX, mouseY, 400, 200);
-        testTextBox.setTextFillColor( Color.blue );
-        pageTitle = testTextBox;
-        shapesToDraw.add(pageTitle);
-        //return homepageTitle;
+        if (shapesToDraw.contains(homepageTitle)) {
+            // Update
+            int indexOfObject = shapesToDraw.indexOf(homepageTitle);
+            shapesToDraw.get(indexOfObject).setBounds(leftSpacing, 50, rightSpacing, 100);
+        } else {
+            // Instantiate
+            String longString = "Homepage Homepage Homepage Homepage Homepage Homepage Homepage ";
+            homepageTitle = GuiShape.makeTextBox(longString, leftSpacing, 50, rightSpacing, 100);
+            homepageTitle.setTextFillColor(Color.blue);
+            shapesToDraw.add(homepageTitle);
+        }
     }
 
     /*******************************************************************************************************************
-     * Gui Element Actions
+     * Gui Update Function
      */
 
     public void guiUpdate () {
-        if (pageTitle != null ) {
-            int indexOfPageTitle = shapesToDraw.indexOf(pageTitle);
-            System.out.println("LALALALALA " + shapesToDraw.size());
-            shapesToDraw.get(indexOfPageTitle).setBounds(mouseX, mouseY, 300, 300);
+        //if (pageTitle != null ) {
+        System.out.println("LALALALALA " + shapesToDraw.size());
+        homepage();
 
-            int indexOfBox = shapesToDraw.indexOf(box);
-            shapesToDraw.get(indexOfBox).setBounds(mouseX, mouseY, 300, 300);
-        }
+        repaint();
+
+        /**
+        int indexOfFlashcard = shapesToDraw.indexOf(flashcard);
+        shapesToDraw.get(indexOfFlashcard).setBounds(mouseX, mouseY, 300, 300);*/
+        //}
     }
 
 

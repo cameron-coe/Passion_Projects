@@ -126,7 +126,6 @@ public class FlashcardApplication {
      * Methods for different pages
      */
     private void homepage() {
-        //gui.guiHomepage(collectionManager.getSubjectList());
         /*
         cliMenu.showHomepage(collectionManager.getSubjectList());
         String userInput = cliMenu.requestUserInputAndFormat();
