@@ -5,6 +5,7 @@ import main.java.model.Flashcard;
 import main.java.model.quizzes.MultipleChoiceQuiz;
 import main.java.model.quizzes.ReviewQuiz;
 import main.java.view.CliMenu;
+import main.java.view.gui.DrawGraphics;
 import main.java.view.gui.Gui;
 
 import java.util.List;
@@ -45,7 +46,7 @@ public class FlashcardApplication {
      * Instance Variables
      */
     private CliMenu cliMenu;
-    private Gui gui;
+    private DrawGraphics drawGraphics;
     private CollectionManager collectionManager;
     private String currentPage = HOMEPAGE;
 
@@ -55,10 +56,10 @@ public class FlashcardApplication {
      */
     public static void main(String[] args) {
         CliMenu cliMenu = new CliMenu();
-        Gui gui = new Gui();
+        DrawGraphics drawGraphics = new DrawGraphics();
         CollectionManager collectionManager = new CollectionManager();
 
-        FlashcardApplication app = new FlashcardApplication(gui, cliMenu, collectionManager);
+        FlashcardApplication app = new FlashcardApplication(drawGraphics, cliMenu, collectionManager);
         app.run();
     }
 
@@ -66,9 +67,9 @@ public class FlashcardApplication {
     /*******************************************************************************************************************
      * Constructor
      */
-    public FlashcardApplication (Gui gui, CliMenu cliMenu, CollectionManager collectionManager) {
+    public FlashcardApplication (DrawGraphics drawGraphics, CliMenu cliMenu, CollectionManager collectionManager) {
         this.cliMenu = cliMenu;
-        this.gui = gui;
+        this.drawGraphics = drawGraphics;
         this.collectionManager = collectionManager;
         this.currentPage = HOMEPAGE;
     }

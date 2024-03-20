@@ -1,16 +1,26 @@
 package main.java.view.gui;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
-public class DrawGraphics {
+public class DrawGraphics extends JFrame {
 
     /*******************************************************************************************************************
      *Constants
      */
     private final static Color BACKGROUND_COLOR = new Color(255, 222, 191);
+    private final Gui gui = new Gui(this);
 
 
     /*******************************************************************************************************************
@@ -18,26 +28,90 @@ public class DrawGraphics {
      */
     private BufferedImage bufferedImage;
     private Graphics2D bufferedGraphics2D;
-    private JFrame jFrame;
     private List<GuiShape> shapesToDraw;
+
+    private int mouseX = 0;
+    private int mouseY = 0;
 
 
     /*******************************************************************************************************************
      * Constructor
      */
-    public DrawGraphics(BufferedImage bufferedImage, JFrame jFrame, List<GuiShape> shapesToDraw) {
-        this.bufferedImage = bufferedImage;
-        this.bufferedGraphics2D = (Graphics2D) bufferedImage.getGraphics();
-        this.jFrame = jFrame;
-        this.shapesToDraw = shapesToDraw;
+    public DrawGraphics() {
+        this.shapesToDraw = new ArrayList<>();
+        windowSettings();
+        addListeners();
+
+        gui.updateFrame(this);
+    }
+
+    /*******************************************************************************************************************
+     * JFrame Window Settings
+     */
+    private void windowSettings() {
+        // JFrame is extended, so it's implied for these commands
+        setTitle("The Flashcard App");
+        setIconImage(loadImageFromImagesDirectory("AppIcon.png"));
+        setSize(800, 450);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // Create image buffer for jFrame
+        bufferedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+        setVisible(true);
+
+    }
+
+    private Image loadImageFromImagesDirectory(String fileName) {
+        Image image = null;
+        String filePath = "src/main/java/images/" + fileName;
+        File imageSource = new File(filePath);
+
+        try {
+            // ImageIO.read() handles opening and closing the datastream.
+            image = ImageIO.read(imageSource);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return image;
+    }
+
+
+
+
+    /*******************************************************************************************************************
+     * Getters
+     */
+    public BufferedImage getBufferedImage() {
+        return this.bufferedImage;
+    }
+
+    public int getMouseX() {
+        return mouseX;
+    }
+
+    public int getMouseY() {
+        return mouseY;
+    }
+
+    /*******************************************************************************************************************
+     * Setters
+     */
+    public void setShapesToDraw (List<GuiShape> shapes) {
+        this.shapesToDraw = shapes;
     }
 
 
     /*******************************************************************************************************************
-     * Getter
+     * Paint Method - Redraws the Frame
      */
-    public BufferedImage getBufferedImage() {
-        return this.bufferedImage;
+    @Override
+    public void paint(Graphics graphics) {
+        //DrawGraphics draw = new DrawGraphics(bufferedImage, this, shapesToDraw);
+        prepareBufferedGraphic();
+        graphics.drawImage(this.getBufferedImage(), 0, 0, null);
     }
 
 
@@ -45,6 +119,9 @@ public class DrawGraphics {
      * Render - applies list of shapes to the Graphics
      */
     public void prepareBufferedGraphic() {
+        this.bufferedImage = this.getBufferedImage();
+        this.bufferedGraphics2D = (Graphics2D) this.bufferedImage.getGraphics();
+
         // Enable antialiasing - makes images smoother and less jagged
         bufferedGraphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         bufferedGraphics2D.setFont(new Font("Times New Roman", Font.PLAIN, 20));
@@ -54,7 +131,56 @@ public class DrawGraphics {
     }
 
 
+
     /*******************************************************************************************************************
+     * Adds Event Listeners
+     */
+    private void addListeners() {
+        // When mouse is moved
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                mouseX = e.getX();
+                mouseY = e.getY();
+                guiUpdate();
+            }
+        });
+
+        // When Window is Resized
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                int width = getWidth();
+                int height = getHeight();
+                bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                guiUpdate();
+            }
+        });
+
+        // When window first opens
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                guiUpdate();
+                repaint();
+            }
+        });
+    }
+
+    /*******************************************************************************************************************
+     * Gui Update Function
+     */
+    public void guiUpdate () {
+        System.out.println("LALALALALA " + shapesToDraw.size());
+        gui.updateFrame(this);
+
+        repaint();
+    }
+
+
+
+    /*******************************************************************************************************************
+     *******************************************************************************************************************
      * Draw Shapes
      */
     private void drawAllShapes() {
@@ -77,6 +203,9 @@ public class DrawGraphics {
             else if (shape.getShapeId() == GuiShape.TEXT_BOX_LINES) {
                 drawTextBoxLines(shape);
             }
+            else if (shape.getShapeId() == GuiShape.IMAGE) {
+                drawImage(shape);
+            }
 
         }
     }
@@ -84,8 +213,8 @@ public class DrawGraphics {
     private void drawBackground() {
         bufferedGraphics2D.setColor(BACKGROUND_COLOR);
 
-        int width = jFrame.getWidth();
-        int height = jFrame.getHeight();
+        int width = getWidth();
+        int height = getHeight();
         bufferedGraphics2D.fillRect(0, 0, width, height);
     }
 
@@ -259,6 +388,43 @@ public class DrawGraphics {
             shape.setPoint2Y(i);
             drawLine(shape);
         }
+    }
+
+    private void drawImage(GuiShape shape) {
+        BufferedImage image = (BufferedImage) loadImageFromImagesDirectory(shape.getImageFileName() );
+        int imageWidth = image.getWidth();
+        int imageHeight = image.getHeight();
+        int imageStartX = shape.getPoint1X();
+        int imageStartY = shape.getPoint1Y();
+
+        // Manually set width in Pixels
+        if (shape.getImageWidthInPixels() > 0) {
+            imageWidth = shape.getImageWidthInPixels();
+        }
+
+        // Manually set height in Pixels
+        if (shape.getImageHeightInPixels() > 0) {
+            imageHeight = shape.getImageHeightInPixels();
+        }
+
+
+
+
+        BufferedImage bi = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = (Graphics2D) bi.getGraphics();
+        //g.drawImage(image, 0, 0, null);
+        g.drawImage(image, 0, 0, imageWidth, imageHeight, null); // Draw the scaled image
+
+        // Gets rid of Graphics2D
+        g.dispose();
+
+        // Color filters for the image
+        float[] scales = { 1f, 1f, 1f, 1f };
+        float[] offsets = new float[10];
+        RescaleOp rescaleOp = new RescaleOp(scales, offsets, null);
+
+        /* Draw the image, applying the filter */
+        bufferedGraphics2D.drawImage(bi, rescaleOp, imageStartX, imageStartY);
     }
 
 }

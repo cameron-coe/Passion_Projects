@@ -1,6 +1,7 @@
 package main.java.view.gui;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class GuiShape {
 
@@ -15,6 +16,7 @@ public class GuiShape {
     public final static int LINE = 4;
     public final static int TEXT_BOX = 5;
     public final static int TEXT_BOX_LINES = 6;
+    public final static int IMAGE = 7;
 
 
     /*******************************************************************************************************************
@@ -36,6 +38,9 @@ public class GuiShape {
     private int arc;
     private String text;
     private double textScaleX;
+    private String imageFileName;
+    private int imageWidthInPixels;
+    private int imageHeightInPixels;
 
 
     /*******************************************************************************************************************
@@ -125,6 +130,18 @@ public class GuiShape {
         this.textScaleX = textScaleX;
     }
 
+    public void setImageFileName(String imageFileName) {
+        this.imageFileName = imageFileName;
+    }
+
+    public void setImageWidthInPixels(int imageWidthInPixels) {
+        this.imageWidthInPixels = imageWidthInPixels;
+    }
+
+    public void setImageHeightInPixels(int getImageHeightInPixels) {
+        this.imageHeightInPixels = getImageHeightInPixels;
+    }
+
     /*******************************************************************************************************************
      * Getters
      */
@@ -184,6 +201,17 @@ public class GuiShape {
         return textScaleX;
     }
 
+    public String getImageFileName() {
+        return imageFileName;
+    }
+
+    public int getImageWidthInPixels() {
+        return imageWidthInPixels;
+    }
+
+    public int getImageHeightInPixels() {
+        return imageHeightInPixels;
+    }
 
     /*******************************************************************************************************************
      * Make Shapes
@@ -239,5 +267,17 @@ public class GuiShape {
 
         return newShape;
     }
+
+    static GuiShape makeImage(String imageFileName, int point1X, int point1Y) {
+        GuiShape newShape = GuiShape.makeRectangle(point1X, point1Y, point1X, point1Y);
+        newShape.setShapeId(GuiShape.IMAGE);
+        newShape.setImageFileName(imageFileName);
+        newShape.setImageHeightInPixels(0);
+        newShape.setImageWidthInPixels(0);
+
+        return newShape;
+    }
+
+
 
 }
