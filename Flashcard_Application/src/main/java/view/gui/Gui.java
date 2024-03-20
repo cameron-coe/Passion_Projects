@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DrawGraphics extends JFrame {
+public class Gui extends JFrame {
 
     /*******************************************************************************************************************
      *Constants
@@ -36,7 +36,7 @@ public class DrawGraphics extends JFrame {
     /*******************************************************************************************************************
      * Constructor
      */
-    public DrawGraphics() {
+    public Gui() {
         this.shapesToDraw = new ArrayList<>();
         windowSettings();
         addListeners();
@@ -108,7 +108,7 @@ public class DrawGraphics extends JFrame {
      */
     @Override
     public void paint(Graphics graphics) {
-        //DrawGraphics draw = new DrawGraphics(bufferedImage, this, shapesToDraw);
+        //Gui draw = new Gui(bufferedImage, this, shapesToDraw);
         prepareBufferedGraphic();
         graphics.drawImage(this.getBufferedImage(), 0, 0, null);
     }

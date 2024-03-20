@@ -21,7 +21,7 @@ public class GuiManager {
      */
     private List<GuiShape> shapesToDraw;
 
-    private DrawGraphics drawGraphics;
+    private Gui gui;
 
 
     /*******************************************************************************************************************
@@ -34,9 +34,9 @@ public class GuiManager {
     /*******************************************************************************************************************
      * Constructor
      */
-    public GuiManager(DrawGraphics drawGraphics) {
+    public GuiManager(Gui gui) {
         shapesToDraw = new ArrayList<>();
-        this.drawGraphics = drawGraphics;
+        this.gui = gui;
 
 
     }
@@ -54,7 +54,7 @@ public class GuiManager {
         addHomepageTitle(jFrame);
         addFlashcard(jFrame);
         //shapesToDraw.add(pageTitle);
-        drawGraphics.setShapesToDraw(this.shapesToDraw);
+        gui.setShapesToDraw(this.shapesToDraw);
     }
 
     private void addHomepageTitle(JFrame jFrame) {
@@ -107,11 +107,11 @@ public class GuiManager {
         if (shapesToDraw.contains(flashcard)) {
             // Update
             int indexOfObject = shapesToDraw.indexOf(flashcard);
-            shapesToDraw.get(indexOfObject).setBounds(drawGraphics.getMouseX(), drawGraphics.getMouseY(), drawGraphics.getMouseX(), drawGraphics.getMouseY());
+            shapesToDraw.get(indexOfObject).setBounds(gui.getMouseX(), gui.getMouseY(), gui.getMouseX(), gui.getMouseY());
             flashcard.setImageWidthInPixels(jFrame.getWidth());
         } else {
             // Instantiate
-            flashcard = GuiShape.makeImage("AppIcon.png", drawGraphics.getMouseX(), drawGraphics.getMouseY());
+            flashcard = GuiShape.makeImage("AppIcon.png", gui.getMouseX(), gui.getMouseY());
 
             shapesToDraw.add(flashcard);
         }
