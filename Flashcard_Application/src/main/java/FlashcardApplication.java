@@ -6,7 +6,6 @@ import main.java.model.quizzes.MultipleChoiceQuiz;
 import main.java.model.quizzes.ReviewQuiz;
 import main.java.view.CliMenu;
 import main.java.view.gui.DrawGraphics;
-import main.java.view.gui.Gui;
 
 import java.util.List;
 

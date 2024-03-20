@@ -19,7 +19,7 @@ public class DrawGraphics extends JFrame {
      *Constants
      */
     private final static Color BACKGROUND_COLOR = new Color(255, 222, 191);
-    private final Gui gui = new Gui(this);
+    private final GuiManager guiManager = new GuiManager(this);
 
 
     /*******************************************************************************************************************
@@ -41,7 +41,7 @@ public class DrawGraphics extends JFrame {
         windowSettings();
         addListeners();
 
-        gui.updateFrame(this);
+        guiManager.updateFrame(this);
     }
 
     /*******************************************************************************************************************
@@ -167,11 +167,11 @@ public class DrawGraphics extends JFrame {
     }
 
     /*******************************************************************************************************************
-     * Gui Update Function
+     * GuiManager Update Function
      */
     public void guiUpdate () {
         System.out.println("LALALALALA " + shapesToDraw.size());
-        gui.updateFrame(this);
+        guiManager.updateFrame(this);
 
         repaint();
     }

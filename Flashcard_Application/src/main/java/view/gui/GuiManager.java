@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Gui{
+public class GuiManager {
 
     /*******************************************************************************************************************
      * Constants
@@ -25,7 +25,7 @@ public class Gui{
 
 
     /*******************************************************************************************************************
-     * Gui Elements
+     * GuiManager Elements
      */
     private GuiShape flashcard;
     private GuiShape homepageTitle;
@@ -34,7 +34,7 @@ public class Gui{
     /*******************************************************************************************************************
      * Constructor
      */
-    public Gui(DrawGraphics drawGraphics) {
+    public GuiManager(DrawGraphics drawGraphics) {
         shapesToDraw = new ArrayList<>();
         this.drawGraphics = drawGraphics;
 
