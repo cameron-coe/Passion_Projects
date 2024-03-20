@@ -1,29 +1,20 @@
-package main.java.view.gui;
+package main.java.view.gui.shapes;
 
 import java.awt.*;
-import java.util.Objects;
 
-public class GuiShape {
+public abstract class GuiShape {
 
     /*******************************************************************************************************************
      *Constants
      */
     private final static Color DEFAULT_FILL = Color.BLUE;
     private final static Color DEFAULT_OUTLINE = Color.BLACK;
-    public final static int RECTANGLE = 1;
-    public final static int ELLIPSE = 2;
-    public final static int ROUNDED_RECTANGLE = 3;
-    public final static int LINE = 4;
-    public final static int TEXT_BOX = 5;
-    public final static int TEXT_BOX_LINES = 6;
-    public final static int IMAGE = 7;
 
 
     /*******************************************************************************************************************
      * Instance Variables
      */
-
-    private int shapeId;
+    private String shapeId;
     private int point1X;
     private int point1Y;
     private int point2X;
@@ -70,7 +61,7 @@ public class GuiShape {
         this.outlineWidth = outlineWidth;
     }
 
-    public void setShapeId(int shapeId) {
+    public void setShapeId(String shapeId) {
         this.shapeId = shapeId;
     }
 
@@ -145,7 +136,7 @@ public class GuiShape {
     /*******************************************************************************************************************
      * Getters
      */
-    public int getShapeId() {
+    public String getShapeId() {
         return shapeId;
     }
 
@@ -212,72 +203,6 @@ public class GuiShape {
     public int getImageHeightInPixels() {
         return imageHeightInPixels;
     }
-
-    /*******************************************************************************************************************
-     * Make Shapes
-     */
-    static GuiShape makeRectangle(int point1X, int point1Y, int point2X, int point2Y) {
-        GuiShape newShape = new GuiShape();
-        newShape.shapeId = RECTANGLE;
-
-        newShape.setBounds(point1X, point1Y, point2X, point2Y);
-
-        return newShape;
-    }
-
-    static GuiShape makeEllipse(int point1X, int point1Y, int point2X, int point2Y) {
-        GuiShape newShape = GuiShape.makeRectangle(point1X, point1Y, point2X, point2Y);
-        newShape.setShapeId(GuiShape.ELLIPSE);
-
-        return newShape;
-    }
-
-    static GuiShape makeRoundedRectangle(int point1X, int point1Y, int point2X, int point2Y, int arc) {
-        GuiShape newShape = GuiShape.makeRectangle(point1X, point1Y, point2X, point2Y);
-        newShape.setShapeId(GuiShape.ROUNDED_RECTANGLE);
-        newShape.setArc(arc);
-
-        return newShape;
-    }
-
-    static GuiShape makeLine(int point1X, int point1Y, int point2X, int point2Y) {
-        GuiShape newShape = new GuiShape();
-        newShape.setShapeId(GuiShape.LINE);
-
-        newShape.setPoint1X(point1X);
-        newShape.setPoint1Y(point1Y);
-        newShape.setPoint2X(point2X);
-        newShape.setPoint2Y(point2Y);
-
-        return newShape;
-    }
-
-    static GuiShape makeTextBox(String text, int point1X, int point1Y, int point2X, int point2Y) {
-        GuiShape newShape = GuiShape.makeRectangle(point1X, point1Y, point2X, point2Y);
-        newShape.setShapeId(GuiShape.TEXT_BOX);
-        newShape.setText(text);
-        newShape.setTextScaleX(1);
-
-        return newShape;
-    }
-
-    static GuiShape makeTextBoxLines(int point1X, int point1Y, int point2X, int point2Y) {
-        GuiShape newShape = GuiShape.makeRectangle(point1X, point1Y, point2X, point2Y);
-        newShape.setShapeId(GuiShape.TEXT_BOX_LINES);
-
-        return newShape;
-    }
-
-    static GuiShape makeImage(String imageFileName, int point1X, int point1Y) {
-        GuiShape newShape = GuiShape.makeRectangle(point1X, point1Y, point1X, point1Y);
-        newShape.setShapeId(GuiShape.IMAGE);
-        newShape.setImageFileName(imageFileName);
-        newShape.setImageHeightInPixels(0);
-        newShape.setImageWidthInPixels(0);
-
-        return newShape;
-    }
-
 
 
 }

@@ -1,5 +1,7 @@
 package main.java.view.gui;
 
+import main.java.view.gui.shapes.*;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -8,9 +10,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -185,25 +184,25 @@ public class DrawGraphics extends JFrame {
      */
     private void drawAllShapes() {
         for (GuiShape shape : shapesToDraw) {
-            if (shape.getShapeId() == GuiShape.RECTANGLE) {
+            if (shape instanceof GuiRectangle) {
                 drawRectangle(shape);
             }
-            else if (shape.getShapeId() == GuiShape.ELLIPSE) {
+            else if (shape instanceof GuiEllipse) {
                 drawEllipse(shape);
             }
-            else if (shape.getShapeId() == GuiShape.ROUNDED_RECTANGLE) {
+            else if (shape instanceof GuiRoundedRectangle) {
                 drawRoundedRectangle(shape);
             }
-            else if (shape.getShapeId() == GuiShape.LINE) {
+            else if (shape instanceof GuiLine) {
                 drawLine(shape);
             }
-            else if (shape.getShapeId() == GuiShape.TEXT_BOX) {
+            else if (shape instanceof GuiTextBox) {
                 drawTextBox(shape);
             }
-            else if (shape.getShapeId() == GuiShape.TEXT_BOX_LINES) {
+            else if (shape instanceof GuiTextBoxLines) {
                 drawTextBoxLines(shape);
             }
-            else if (shape.getShapeId() == GuiShape.IMAGE) {
+            else if (shape instanceof GuiImage) {
                 drawImage(shape);
             }
 

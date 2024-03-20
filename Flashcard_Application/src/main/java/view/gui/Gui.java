@@ -1,12 +1,9 @@
 package main.java.view.gui;
 
 
-import main.java.model.Subject;
-
+import main.java.view.gui.shapes.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +69,7 @@ public class Gui{
         } else {
             // Instantiate
             String longString = "Homepage Homepage Homepage Homepage Homepage Homepage Homepage ";
-            homepageTitle = GuiShape.makeTextBox(longString, leftSpacing, 50, rightSpacing, 100);
+            homepageTitle = new GuiTextBox(longString, leftSpacing, 50, rightSpacing, 100);
             homepageTitle.setTextFillColor(Color.red);
             shapesToDraw.add(homepageTitle);
         }
@@ -96,7 +93,7 @@ public class Gui{
             flashcard.setImageWidthInPixels(jFrame.getWidth()/2);
         } else {
             // Instantiate
-            flashcard = GuiShape.makeRoundedRectangle(cardStartX, cardStartY, cardEndX, cardEndY, 25);
+            flashcard = new GuiRoundedRectangle(cardStartX, cardStartY, cardEndX, cardEndY, 25);
             flashcard.setFillColor(Color.WHITE);
 
             shapesToDraw.add(flashcard);
