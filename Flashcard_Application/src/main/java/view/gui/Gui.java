@@ -121,9 +121,15 @@ public class Gui extends JFrame {
         this.bufferedImage = this.getBufferedImage();
         this.bufferedGraphics2D = (Graphics2D) this.bufferedImage.getGraphics();
 
-        // Enable antialiasing - makes images smoother and less jagged
+        // Rendering hints to produce smoother rendering
         bufferedGraphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        bufferedGraphics2D.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        bufferedGraphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        bufferedGraphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        bufferedGraphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        bufferedGraphics2D.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        bufferedGraphics2D.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+
+        bufferedGraphics2D.setFont(new Font("Times New Roman", Font.PLAIN, 30));
 
         drawBackground();
         drawAllShapes();
@@ -177,7 +183,6 @@ public class Gui extends JFrame {
     }
 
 
-
     /*******************************************************************************************************************
      *******************************************************************************************************************
      * Draw Shapes
@@ -198,6 +203,7 @@ public class Gui extends JFrame {
             }
             else if (shape instanceof GuiTextBox) {
                 drawTextBox(shape);
+                drawTextBox(shape); // Drawn twice to make the text more clear
             }
             else if (shape instanceof GuiTextBoxLines) {
                 drawTextBoxLines(shape);
@@ -211,7 +217,6 @@ public class Gui extends JFrame {
 
     private void drawBackground() {
         bufferedGraphics2D.setColor(BACKGROUND_COLOR);
-
         int width = getWidth();
         int height = getHeight();
         bufferedGraphics2D.fillRect(0, 0, width, height);

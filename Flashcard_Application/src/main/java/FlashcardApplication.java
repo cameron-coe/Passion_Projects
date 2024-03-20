@@ -52,7 +52,7 @@ public class FlashcardApplication {
 
     /*******************************************************************************************************************
      * Main Method
-     */
+
     public static void main(String[] args) {
         CliMenu cliMenu = new CliMenu();
         Gui gui = new Gui();
@@ -61,7 +61,7 @@ public class FlashcardApplication {
         FlashcardApplication app = new FlashcardApplication(gui, cliMenu, collectionManager);
         app.run();
     }
-
+*/
 
     /*******************************************************************************************************************
      * Constructor

@@ -205,4 +205,15 @@ public abstract class GuiShape {
     }
 
 
+    /*******************************************************************************************************************
+     * Other Methods
+     */
+    public void noFill() {
+        setFillColor(new Color(0, 0, 0, 0));
+    }
+
+    public void noOutline() {
+        setOutlineColor(new Color(0, 0, 0, 0));
+    }
+
 }
