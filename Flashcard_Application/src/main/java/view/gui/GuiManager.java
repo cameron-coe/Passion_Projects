@@ -85,7 +85,7 @@ public class GuiManager {
 
         String flashcardBaseId = "flashcardBase";
         String borderId = "flashcardBorder";
-        String questionNumberId = "flashcardQuestionNumber";
+        String cardHeaderId = "flashcardQuestionNumber";
         String frontTextId = "flashcardFrontText";
         String frontTextLinesId = "flashcardFrontTextLines";
         //String backTextId = "flashcardBackText";
@@ -95,63 +95,112 @@ public class GuiManager {
             int indexOfFlashcardBase = indexOfGuiShapeById(flashcardBaseId);
             shapesToDraw.get(indexOfFlashcardBase).setBounds(cardStartX, cardStartY, cardEndX, cardEndY);
 
-            int indexOfBorder = indexOfGuiShapeById(borderId);
-            shapesToDraw.get(indexOfBorder).setBounds(cardStartX + flashcardBorderSpacing,
-                    cardStartY + flashcardBorderSpacing,
-                    cardEndX - flashcardBorderSpacing,
-                    cardEndY - flashcardBorderSpacing);
+            GuiShape flashcardBase = shapesToDraw.get(indexOfFlashcardBase);
 
-            int indexOfQuestionNumber = indexOfGuiShapeById(questionNumberId);
-            shapesToDraw.get(indexOfQuestionNumber).setBounds(cardStartX, cardStartY + ((int) (0.08 * cardWidth)), cardEndX, cardEndY);
-
-            int indexOfTextBoxLines = indexOfGuiShapeById(frontTextLinesId);
-            shapesToDraw.get(indexOfTextBoxLines).setBounds(cardStartX + (flashcardBorderSpacing * 2),
-                    cardStartY + ((int) (0.2 * cardWidth)),
-                    cardEndX - (flashcardBorderSpacing * 2),
-                    cardEndY - (flashcardBorderSpacing * 2));
-
-            int indexOfTextBox = indexOfGuiShapeById(frontTextId);
-            shapesToDraw.get(indexOfTextBox).setBounds(cardStartX + (flashcardBorderSpacing * 2),
-                    cardStartY + ((int) (0.2 * cardWidth)),
-                    cardEndX - (flashcardBorderSpacing * 2),
-                    cardEndY - (flashcardBorderSpacing * 2));
+            updateFlashcardHeader(cardHeaderId, flashcardBase);
+            updateFlashcardBorder(borderId, flashcardBase);
+            updateFlashcardTextLines(frontTextLinesId, flashcardBase);
+            updateFlashcardFrontText(frontTextId, flashcardBase);
 
         } else {
             // Instantiate
-            GuiShape flashcardBase = new GuiRoundedRectangle(flashcardBaseId, cardStartX, cardStartY, cardEndX, cardEndY, 25);
-            flashcardBase.setFillColor(Color.WHITE);
-            shapesToDraw.add(flashcardBase);
+            instantiateFlashcardBase(flashcardBaseId, cardStartX, cardStartY, cardEndX, cardEndY);
+            instantiateFlashcardHeader(cardHeaderId);
+            instantiateFlashcardTextLines(frontTextLinesId);
+            instantiateFlashcardBorder(borderId);
+            instantiateFrontCardText(frontTextId);
+            /**********/
 
-            GuiShape questionNumber = new GuiTextBox(questionNumberId, "Question ##:",
-                    cardStartX + flashcardBorderSpacing,
-                    cardStartY + flashcardBorderSpacing + 50,
-                    cardEndX - (2 * flashcardBorderSpacing),
-                    cardEndY - (2 * flashcardBorderSpacing));
-            questionNumber.setTextFillColor(Color.BLACK);
-            shapesToDraw.add(questionNumber);
 
-            GuiShape frontTextLines = new GuiTextBoxLines(frontTextLinesId, 0, 0, 0, 0);
-            frontTextLines.setOutlineColor(new Color(0,0, 255, 100));
-            frontTextLines.setOutlineWidth(6); // TODO: set width
-            shapesToDraw.add(frontTextLines);
 
-            GuiShape frontText = new GuiTextBox(frontTextId, "The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog.", cardStartX, cardStartY + 50, cardEndX, cardEndY);
-            frontText.setTextFillColor(Color.BLACK);
-            shapesToDraw.add(frontText);
-
-            GuiShape flashcardBorder = new GuiRoundedRectangle(borderId,
-                    cardStartX + flashcardBorderSpacing,
-                    cardStartY + flashcardBorderSpacing,
-                    cardEndX - (2 * flashcardBorderSpacing),
-                    cardEndY - (2 * flashcardBorderSpacing), 25);
-            flashcardBorder.setOutlineColor(Color.ORANGE);
-            flashcardBorder.setOutlineWidth(2);
-            flashcardBorder.noFill();
-            shapesToDraw.add(flashcardBorder);
         }
     }
 
+    private void instantiateFlashcardBase(String id, int cardStartX, int cardStartY, int cardEndX, int cardEndY) {
+        GuiShape flashcardBase = new GuiRoundedRectangle(id, cardStartX, cardStartY, cardEndX, cardEndY, 25);
+        flashcardBase.setFillColor(Color.WHITE);
+        flashcardBase.noOutline();
+        shapesToDraw.add(flashcardBase);
+    }
 
+    public void instantiateFlashcardHeader(String id) {
+        GuiShape cardHeader = new GuiTextBox(id, "For 3 Points:", 0, 0, 0, 0);
+        cardHeader.setTextFillColor(Color.BLACK);
+        shapesToDraw.add(cardHeader);
+    }
+
+    private void instantiateFlashcardBorder(String id) {
+        GuiShape flashcardBase = new GuiRoundedRectangle(id, 0, 0, 0, 0, 0);
+        flashcardBase.setOutlineColor(Color.ORANGE);
+        flashcardBase.noFill();
+        shapesToDraw.add(flashcardBase);
+    }
+
+    private void instantiateFlashcardTextLines(String id) {
+        GuiShape frontTextLines = new GuiTextBoxLines(id, 0, 0, 0, 0);
+        frontTextLines.setOutlineColor(new Color(0,0, 255, 100));
+        frontTextLines.setOutlineWidth(1);
+        shapesToDraw.add(frontTextLines);
+    }
+
+    private void instantiateFrontCardText(String id) {
+        GuiShape frontText = new GuiTextBox(id, "", 0, 0, 0, 0);
+        frontText.setTextFillColor(Color.BLACK);
+        shapesToDraw.add(frontText);
+    }
+
+
+    public void updateFlashcardHeader(String id, GuiShape flashcardBase) {
+        double flashcardBaseWidth = flashcardBase.getPoint2X() - flashcardBase.getPoint1X();
+        double marginWidth = flashcardBaseWidth * 0.02;
+
+        int startX = (int) (flashcardBase.getPoint1X() + marginWidth);
+        int startY = (int) (flashcardBase.getPoint1Y() + (marginWidth * 3));
+        int endX = (int) (flashcardBase.getPoint2X() - marginWidth);
+        int endY = (int) (flashcardBase.getPoint2Y() - marginWidth);
+
+        int indexOfHeader = indexOfGuiShapeById(id);
+        shapesToDraw.get(indexOfHeader).setBounds(startX, startY, endX, endY);
+    }
+
+    public void updateFlashcardTextLines(String id, GuiShape flashcardBase) {
+        double flashcardBaseWidth = flashcardBase.getPoint2X() - flashcardBase.getPoint1X();
+        double marginWidth = flashcardBaseWidth * 0.02;
+
+        int startX = (int) (flashcardBase.getPoint1X() + marginWidth);
+        int startY = (int) (flashcardBase.getPoint1Y() + (marginWidth * 8));
+        int endX = (int) (flashcardBase.getPoint2X() - marginWidth);
+        int endY = (int) (flashcardBase.getPoint2Y() - (marginWidth * 2));
+
+        int indexOfTextLines = indexOfGuiShapeById(id);
+        shapesToDraw.get(indexOfTextLines).setBounds(startX, startY, endX, endY);
+    }
+
+    public void updateFlashcardBorder(String id, GuiShape flashcardBase) {
+        double flashcardBaseWidth = flashcardBase.getPoint2X() - flashcardBase.getPoint1X();
+        double marginWidth = flashcardBaseWidth * 0.02;
+        int arc = (int) (flashcardBase.getArc() * 0.9);
+
+        int startX = (int) (flashcardBase.getPoint1X() + marginWidth);
+        int startY = (int) (flashcardBase.getPoint1Y() + marginWidth);
+        int endX = (int) (flashcardBase.getPoint2X() - marginWidth);
+        int endY = (int) (flashcardBase.getPoint2Y() - marginWidth);
+
+        int indexOfBorder = indexOfGuiShapeById(id);
+        shapesToDraw.get(indexOfBorder).setBounds(startX, startY, endX, endY);
+        shapesToDraw.get(indexOfBorder).setArc(arc);
+    }
+
+    public void updateFlashcardFrontText(String id, GuiShape flashcardBase) {
+        updateFlashcardTextLines(id, flashcardBase);
+        int indexOfText = indexOfGuiShapeById(id);
+        shapesToDraw.get(indexOfText).setText("The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog.");
+    }
+
+
+    /*******************************************************************************************************************
+     * Getting Values from the ShapesToDraw List
+     */
     private boolean shapesToDrawListContainsId(String id) {
         for (GuiShape shape : this.shapesToDraw) {
             String shapeId = shape.getShapeId();
@@ -161,7 +210,6 @@ public class GuiManager {
                 }
             }
         }
-
         return false;
     }
 
@@ -175,7 +223,6 @@ public class GuiManager {
                 }
             }
         }
-
         return -1;
     }
 
