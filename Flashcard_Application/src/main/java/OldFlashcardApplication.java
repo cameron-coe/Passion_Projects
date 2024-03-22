@@ -21,7 +21,7 @@ import java.util.List;
  * TODO: Make a visual representation of progress -- Dragons
  */
 
-public class FlashcardApplication {
+public class OldFlashcardApplication {
 
     /*******************************************************************************************************************
      * Constants
@@ -58,7 +58,7 @@ public class FlashcardApplication {
         Gui gui = new Gui();
         CollectionManager collectionManager = new CollectionManager();
 
-        FlashcardApplication app = new FlashcardApplication(gui, cliMenu, collectionManager);
+        OldFlashcardApplication app = new OldFlashcardApplication(gui, cliMenu, collectionManager);
         app.run();
     }
 */
@@ -66,7 +66,7 @@ public class FlashcardApplication {
     /*******************************************************************************************************************
      * Constructor
      */
-    public FlashcardApplication (Gui gui, CliMenu cliMenu, CollectionManager collectionManager) {
+    public OldFlashcardApplication(Gui gui, CliMenu cliMenu, CollectionManager collectionManager) {
         this.cliMenu = cliMenu;
         this.gui = gui;
         this.collectionManager = collectionManager;

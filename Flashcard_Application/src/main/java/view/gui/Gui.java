@@ -19,7 +19,7 @@ public class Gui extends JFrame {
      *Constants
      */
     private final static Color BACKGROUND_COLOR = new Color(255, 222, 191);
-    private final GuiManager guiManager = new GuiManager(this);
+    private final FlashcardApplication flashcardApplication = new FlashcardApplication(this);
     private final JFrame currentJFrame = this;
 
 
@@ -34,6 +34,8 @@ public class Gui extends JFrame {
     private int mouseY = 0;
 
 
+
+
     /*******************************************************************************************************************
      * Constructor
      */
@@ -42,7 +44,7 @@ public class Gui extends JFrame {
         windowSettings();
         addListeners();
 
-        guiManager.runtimeStartEvent(this);
+        flashcardApplication.runtimeStartEvent(this);
     }
 
     /*******************************************************************************************************************
@@ -150,12 +152,7 @@ public class Gui extends JFrame {
             public void mouseMoved(MouseEvent e) {
                 mouseX = e.getX();
                 mouseY = e.getY();
-
-                isMouseOverButton = false;
-                drawAllShapes();  // TODO: Make a method to check if mouse is over a button
-                if (isMouseOverButton) {
-                    repaint();
-                }
+                flashcardApplication.mouseMoveEvent(currentJFrame);
             }
         });
 
@@ -166,7 +163,7 @@ public class Gui extends JFrame {
                 int width = getWidth();
                 int height = getHeight();
                 bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-                guiManager.windowSizeChangeEvent(currentJFrame);
+                flashcardApplication.windowSizeChangeEvent(currentJFrame);
             }
         });
     }
@@ -424,19 +421,17 @@ public class Gui extends JFrame {
     private void drawButton(GuiShapeDataObject shape) {
         int startX = shape.getPoint1X();
         int startY = shape.getPoint1Y();
-        int endX = shape.getPoint2X();
-        int endY = shape.getPoint2Y();
         int width = shape.getPoint2X() - shape.getPoint1X();
         int height = shape.getPoint2Y() - shape.getPoint1Y();
         int arc = shape.getArc();
 
-        // Creates the default shape Fill
-        bufferedGraphics2D.setColor( shape.getFillColor() );
-        // Fill When the mouse hovers over the button
-        if (mouseX > startX && mouseX < endX && mouseY > startY && mouseY < endY) {
-            bufferedGraphics2D.setColor( Color.RED );
-        }
         // Draws the Shape Fill
+        GuiButtonDataObject button = (GuiButtonDataObject) shape;
+        if(button.isMouseOver()) {
+            bufferedGraphics2D.setColor(button.getHoverColor());
+        } else {
+            bufferedGraphics2D.setColor(shape.getFillColor());
+        }
         bufferedGraphics2D.fillRoundRect(startX, startY, width, height, arc, arc);
 
         // Creates the shape Outline
@@ -446,15 +441,6 @@ public class Gui extends JFrame {
     }
 
 
-    /*******************************************************************************************************************
-     * Checks if mouse if over a button
-     */
-    private boolean isMouseOverButton() {
-        for (GuiShapeDataObject shape : shapesToDraw) {
-            if (shape instanceof GuiButtonDataObject) {
-                drawButton(shape);
-            }
-        }
-    }
+
 
 }

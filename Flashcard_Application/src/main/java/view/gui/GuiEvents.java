@@ -22,6 +22,7 @@ public class GuiEvents {
     //String backTextId = "flashcardBackText";
 
     String testButtonId = "testButton";
+    String testButton2Id = "testButton2";
 
 
     /*******************************************************************************************************************
@@ -33,14 +34,25 @@ public class GuiEvents {
 
 
     /*******************************************************************************************************************
+     * Getter
+     */
+    public List<GuiShapeDataObject> getShapesToDraw() {
+        return shapesToDraw;
+    }
+
+
+    /*******************************************************************************************************************
      * Event Methods
      */
     public List<GuiShapeDataObject> runtimeStartEvent(JFrame jFrame) {
         instantiateFlashcard();
         updateFlashcard(jFrame);
 
+        // TODO - Remove test buttons
         instantiateButton(testButtonId);
+        instantiateButton2(testButton2Id);
         updateButton(testButtonId, jFrame);
+        updateButton2(testButton2Id, jFrame);
 
         return this.shapesToDraw;
     }
@@ -157,6 +169,12 @@ public class GuiEvents {
         shapesToDraw.add(button);
     }
 
+    private void instantiateButton2(String id) {
+        GuiShapeDataObject button = new GuiButtonDataObject(id, 0, 0, 0, 0, 25);
+        button.setFillColor(Color.cyan);
+        shapesToDraw.add(button);
+    }
+
 
     /*******************************************************************************************************************
      * Update GUI Shapes
@@ -228,10 +246,18 @@ public class GuiEvents {
 
     public int updateButton(String id, JFrame jFrame) {
         // Update
-        int indexOfFlashcardBase = indexOfGuiShapeById(id);
-        shapesToDraw.get(indexOfFlashcardBase).setBounds(50, 50, 100, 100);
+        int indexOfObject = indexOfGuiShapeById(id);
+        shapesToDraw.get(indexOfObject).setBounds(50, 50, 100, 100);
 
-        return indexOfFlashcardBase;
+        return indexOfObject;
+    }
+
+    public int updateButton2(String id, JFrame jFrame) {
+        // Update
+        int indexOfObject = indexOfGuiShapeById(id);
+        shapesToDraw.get(indexOfObject).setBounds(150, 50, 200, 100);
+
+        return indexOfObject;
     }
 
 

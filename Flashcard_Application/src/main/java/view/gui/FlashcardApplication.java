@@ -7,14 +7,14 @@ import java.awt.*;
 import java.util.List;
 
 /**
+ * TODO: Encapsulate Drawing the frame
  * TODO: Resize Text With Window
- * TODO: Add Pages
- * TODO: Make buttons
- * TODO: Add mouse over event listener
+ * TODO: Add Application Pages
+ * TODO: Make buttons that click and return a value
  * TODO: Add mouse click event listener
  */
 
-public class GuiManager {
+public class FlashcardApplication {
 
     /*******************************************************************************************************************
      * Constants
@@ -28,14 +28,17 @@ public class GuiManager {
      */
     private Gui gui;
     private GuiEvents guiEvents;
+    private ButtonManager buttonManager;
+
 
 
     /*******************************************************************************************************************
      * Constructor
      */
-    public GuiManager(Gui gui) {
+    public FlashcardApplication(Gui gui) {
         this.gui = gui;
         this.guiEvents = new GuiEvents();
+        this.buttonManager = new ButtonManager();
     }
 
 
@@ -44,8 +47,8 @@ public class GuiManager {
      */
     public static void main(String[] args) {
         Gui gui = new Gui();
-        GuiManager guiManager = new GuiManager(gui);
-        guiManager.run();
+        FlashcardApplication flashcardApplication = new FlashcardApplication(gui);
+        flashcardApplication.run();
     }
 
 
@@ -66,6 +69,12 @@ public class GuiManager {
         System.out.println("WINDOW SIZE CHANGE EVENT >>> " + shapesToDraw.size());
     }
 
+    public void mouseMoveEvent(JFrame jFrame) {
+        List<GuiShapeDataObject> shapesToDraw = guiEvents.windowUpdateEvent(jFrame);
+        buttonManager.updateButtons(gui, guiEvents);
+        System.out.println("MOUSE MOVE EVENT >>> " + shapesToDraw.size());
+    }
+
 
     /*******************************************************************************************************************
      * Runtime Method
@@ -81,5 +90,12 @@ public class GuiManager {
     public void buttonPress(String buttonId) {
 
     }
+
+
+
+    /*******************************************************************************************************************
+     * Checks if mouse if over a button
+     */
+
 
 }
