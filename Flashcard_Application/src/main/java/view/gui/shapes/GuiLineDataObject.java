@@ -1,11 +1,11 @@
 package main.java.view.gui.shapes;
 
-public class GuiLine extends GuiShape{
+public class GuiLineDataObject extends GuiShapeDataObject {
 
     /*******************************************************************************************************************
      * Constructor
      */
-    public GuiLine(String id, int point1X, int point1Y, int point2X, int point2Y) {
+    public GuiLineDataObject(String id, int point1X, int point1Y, int point2X, int point2Y) {
         this.setShapeId(id);
         this.setPoint1X(point1X);
         this.setPoint1Y(point1Y);

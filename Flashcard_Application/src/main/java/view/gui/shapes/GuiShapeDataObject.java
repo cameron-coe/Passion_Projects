@@ -2,7 +2,7 @@ package main.java.view.gui.shapes;
 
 import java.awt.*;
 
-public abstract class GuiShape {
+public abstract class GuiShapeDataObject {
 
     /*******************************************************************************************************************
      *Constants
@@ -37,7 +37,7 @@ public abstract class GuiShape {
     /*******************************************************************************************************************
      * Constructor
      */
-    public GuiShape() {
+    public GuiShapeDataObject() {
 
     }
 

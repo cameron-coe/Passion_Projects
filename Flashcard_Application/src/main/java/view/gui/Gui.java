@@ -20,6 +20,7 @@ public class Gui extends JFrame {
      */
     private final static Color BACKGROUND_COLOR = new Color(255, 222, 191);
     private final GuiManager guiManager = new GuiManager(this);
+    private final JFrame currentJFrame = this;
 
 
     /*******************************************************************************************************************
@@ -27,7 +28,7 @@ public class Gui extends JFrame {
      */
     private BufferedImage bufferedImage;
     private Graphics2D bufferedGraphics2D;
-    private List<GuiShape> shapesToDraw;
+    private List<GuiShapeDataObject> shapesToDraw;
 
     private int mouseX = 0;
     private int mouseY = 0;
@@ -41,7 +42,7 @@ public class Gui extends JFrame {
         windowSettings();
         addListeners();
 
-        guiManager.updateFrame(this);
+        guiManager.runtimeStartEvent(this);
     }
 
     /*******************************************************************************************************************
@@ -78,13 +79,15 @@ public class Gui extends JFrame {
     }
 
 
-
-
     /*******************************************************************************************************************
      * Getters
      */
     public BufferedImage getBufferedImage() {
         return this.bufferedImage;
+    }
+
+    public List<GuiShapeDataObject> getShapesToDraw() {
+        return shapesToDraw;
     }
 
     public int getMouseX() {
@@ -95,10 +98,11 @@ public class Gui extends JFrame {
         return mouseY;
     }
 
+
     /*******************************************************************************************************************
      * Setters
      */
-    public void setShapesToDraw (List<GuiShape> shapes) {
+    public void setShapesToDraw (List<GuiShapeDataObject> shapes) {
         this.shapesToDraw = shapes;
     }
 
@@ -108,14 +112,14 @@ public class Gui extends JFrame {
      */
     @Override
     public void paint(Graphics graphics) {
-        //Gui draw = new Gui(bufferedImage, this, shapesToDraw);
         prepareBufferedGraphic();
         graphics.drawImage(this.getBufferedImage(), 0, 0, null);
+        System.out.println("Repaint!");
     }
 
 
     /*******************************************************************************************************************
-     * Render - applies list of shapes to the Graphics
+     * Render - applies list of shapes to the Buffered Graphic
      */
     public void prepareBufferedGraphic() {
         this.bufferedImage = this.getBufferedImage();
@@ -136,7 +140,6 @@ public class Gui extends JFrame {
     }
 
 
-
     /*******************************************************************************************************************
      * Adds Event Listeners
      */
@@ -147,7 +150,12 @@ public class Gui extends JFrame {
             public void mouseMoved(MouseEvent e) {
                 mouseX = e.getX();
                 mouseY = e.getY();
-                guiUpdate();
+
+                isMouseOverButton = false;
+                drawAllShapes();  // TODO: Make a method to check if mouse is over a button
+                if (isMouseOverButton) {
+                    repaint();
+                }
             }
         });
 
@@ -158,60 +166,43 @@ public class Gui extends JFrame {
                 int width = getWidth();
                 int height = getHeight();
                 bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-                guiUpdate();
-            }
-        });
-
-        // When window first opens
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-                guiUpdate();
-                repaint();
+                guiManager.windowSizeChangeEvent(currentJFrame);
             }
         });
     }
 
-    /*******************************************************************************************************************
-     * GuiManager Update Function
-     */
-    public void guiUpdate () {
-        System.out.println("LALALALALA " + shapesToDraw.size());
-        guiManager.updateFrame(this);
-
-        repaint();
-    }
-
 
     /*******************************************************************************************************************
-     *******************************************************************************************************************
      * Draw Shapes
      */
+    private boolean isMouseOverButton = false;
     private void drawAllShapes() {
-        for (GuiShape shape : shapesToDraw) {
-            if (shape instanceof GuiRectangle) {
+        for (GuiShapeDataObject shape : shapesToDraw) {
+            if (shape instanceof GuiRectangleDataObject) {
                 drawRectangle(shape);
             }
-            else if (shape instanceof GuiEllipse) {
+            else if (shape instanceof GuiEllipseDataObject) {
                 drawEllipse(shape);
             }
-            else if (shape instanceof GuiRoundedRectangle) {
+            else if (shape instanceof GuiRoundedRectangleDataObject) {
                 drawRoundedRectangle(shape);
             }
-            else if (shape instanceof GuiLine) {
+            else if (shape instanceof GuiLineDataObject) {
                 drawLine(shape);
             }
-            else if (shape instanceof GuiTextBox) {
+            else if (shape instanceof GuiTextBoxDataObject) {
                 drawTextBox(shape);
                 drawTextBox(shape); // Drawn twice to make the text more clear
             }
-            else if (shape instanceof GuiTextBoxLines) {
+            else if (shape instanceof GuiTextBoxLinesDataObject) {
                 drawTextBoxLines(shape);
             }
-            else if (shape instanceof GuiImage) {
+            else if (shape instanceof GuiImageDataObject) {
                 drawImage(shape);
             }
-
+            else if (shape instanceof GuiButtonDataObject) {
+                drawButton(shape);
+            }
         }
     }
 
@@ -222,8 +213,7 @@ public class Gui extends JFrame {
         bufferedGraphics2D.fillRect(0, 0, width, height);
     }
 
-
-    private void drawRectangle(GuiShape shape) {
+    private void drawRectangle(GuiShapeDataObject shape) {
         int startX = shape.getPoint1X();
         int startY = shape.getPoint1Y();
         int width = shape.getPoint2X() - shape.getPoint1X();
@@ -239,7 +229,7 @@ public class Gui extends JFrame {
         bufferedGraphics2D.drawRect(startX, startY, width, height);
     }
 
-    private void drawEllipse(GuiShape shape) {
+    private void drawEllipse(GuiShapeDataObject shape) {
         int startX = shape.getPoint1X();
         int startY = shape.getPoint1Y();
         int width = shape.getPoint2X() - shape.getPoint1X();
@@ -255,7 +245,7 @@ public class Gui extends JFrame {
         bufferedGraphics2D.drawOval(startX, startY, width, height);
     }
 
-    private void drawRoundedRectangle(GuiShape shape) {
+    private void drawRoundedRectangle(GuiShapeDataObject shape) {
         int startX = shape.getPoint1X();
         int startY = shape.getPoint1Y();
         int width = shape.getPoint2X() - shape.getPoint1X();
@@ -272,7 +262,7 @@ public class Gui extends JFrame {
         bufferedGraphics2D.drawRoundRect(startX, startY, width, height, arc, arc);
     }
 
-    private void drawLine(GuiShape shape) {
+    private void drawLine(GuiShapeDataObject shape) {
         int startX = shape.getPoint1X();
         int startY = shape.getPoint1Y();
         int endX = shape.getPoint2X();
@@ -284,7 +274,7 @@ public class Gui extends JFrame {
         bufferedGraphics2D.drawLine(startX, startY, endX, endY);
     }
 
-    private void drawTextBox (GuiShape shape) {
+    private void drawTextBox (GuiShapeDataObject shape) {
         int startX = shape.getPoint1X();
         int startY = shape.getPoint1Y();
         int width = shape.getPoint2X() - shape.getPoint1X();
@@ -376,7 +366,7 @@ public class Gui extends JFrame {
         }
     }
 
-    private void drawTextBoxLines(GuiShape shape) {
+    private void drawTextBoxLines(GuiShapeDataObject shape) {
         int startY = shape.getPoint1Y();
         int endY = shape.getPoint2Y();
 
@@ -394,7 +384,7 @@ public class Gui extends JFrame {
         }
     }
 
-    private void drawImage(GuiShape shape) {
+    private void drawImage(GuiShapeDataObject shape) {
         BufferedImage image = (BufferedImage) loadImageFromImagesDirectory(shape.getImageFileName() );
         int imageWidth = image.getWidth();
         int imageHeight = image.getHeight();
@@ -429,6 +419,42 @@ public class Gui extends JFrame {
 
         /* Draw the image, applying the filter */
         bufferedGraphics2D.drawImage(bi, rescaleOp, imageStartX, imageStartY);
+    }
+
+    private void drawButton(GuiShapeDataObject shape) {
+        int startX = shape.getPoint1X();
+        int startY = shape.getPoint1Y();
+        int endX = shape.getPoint2X();
+        int endY = shape.getPoint2Y();
+        int width = shape.getPoint2X() - shape.getPoint1X();
+        int height = shape.getPoint2Y() - shape.getPoint1Y();
+        int arc = shape.getArc();
+
+        // Creates the default shape Fill
+        bufferedGraphics2D.setColor( shape.getFillColor() );
+        // Fill When the mouse hovers over the button
+        if (mouseX > startX && mouseX < endX && mouseY > startY && mouseY < endY) {
+            bufferedGraphics2D.setColor( Color.RED );
+        }
+        // Draws the Shape Fill
+        bufferedGraphics2D.fillRoundRect(startX, startY, width, height, arc, arc);
+
+        // Creates the shape Outline
+        bufferedGraphics2D.setColor( shape.getOutlineColor() );
+        bufferedGraphics2D.setStroke(new BasicStroke( shape.getOutlineWidth() ));
+        bufferedGraphics2D.drawRoundRect(startX, startY, width, height, arc, arc);
+    }
+
+
+    /*******************************************************************************************************************
+     * Checks if mouse if over a button
+     */
+    private boolean isMouseOverButton() {
+        for (GuiShapeDataObject shape : shapesToDraw) {
+            if (shape instanceof GuiButtonDataObject) {
+                drawButton(shape);
+            }
+        }
     }
 
 }

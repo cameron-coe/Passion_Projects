@@ -1,13 +1,14 @@
 package main.java.view.gui.shapes;
 
-public class GuiRoundedRectangle extends GuiShape{
+public class GuiTextBoxDataObject extends GuiShapeDataObject {
 
     /*******************************************************************************************************************
      * Constructor
      */
-    public GuiRoundedRectangle(String id, int point1X, int point1Y, int point2X, int point2Y, int arc) {
+    public GuiTextBoxDataObject(String id, String text, int point1X, int point1Y, int point2X, int point2Y) {
         this.setShapeId(id);
         this.setBounds(point1X, point1Y, point2X, point2Y);
-        this.setArc(arc);
+        this.setText(text);
+        this.setTextScaleX(1);
     }
 }
