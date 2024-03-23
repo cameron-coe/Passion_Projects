@@ -70,9 +70,20 @@ public class FlashcardApplication {
     }
 
     public void mouseMoveEvent(JFrame jFrame) {
+        buttonManager.updateButtonsWhenMouseGoesInOrOut(gui, guiEvents);
+
         List<GuiShapeDataObject> shapesToDraw = guiEvents.windowUpdateEvent(jFrame);
-        buttonManager.updateButtons(gui, guiEvents);
         System.out.println("MOUSE MOVE EVENT >>> " + shapesToDraw.size());
+    }
+
+    public void mousePressedEvent(JFrame jFrame) {
+        List<GuiShapeDataObject> shapesToDraw = guiEvents.windowUpdateEvent(jFrame);
+        System.out.println("MOUSE PRESSED EVENT >>> " + shapesToDraw.size());
+    }
+
+    public void mouseClickEvent(JFrame jFrame) {
+        List<GuiShapeDataObject> shapesToDraw = guiEvents.windowUpdateEvent(jFrame);
+        System.out.println("MOUSE CLICK EVENT >>> " + shapesToDraw.size());
     }
 
 

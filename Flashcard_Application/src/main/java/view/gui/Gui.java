@@ -27,6 +27,8 @@ public class Gui extends JFrame {
 
     private int mouseX = 0;
     private int mouseY = 0;
+    private int mouseDownX = 0;
+    private int mouseDownY = 0;
 
 
 
@@ -35,16 +37,15 @@ public class Gui extends JFrame {
      * Constructor
      */
     public Gui() {
-        addListeners();
         setTitle("The Flashcard App");
-        setSize(800, 450);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
 
+        setSize(800, 450);  // Size needs to be set before the imageRenderer can render an image
         imageRenderer = new ImageRenderer(this);
-        flashcardApplication.runtimeStartEvent(this);
-
         setIconImage(imageRenderer.loadImageFromImagesDirectory("AppIcon.png"));
+
+        flashcardApplication.runtimeStartEvent(this);
+        addListeners();
 
         setVisible(true);
     }
@@ -53,10 +54,6 @@ public class Gui extends JFrame {
     /*******************************************************************************************************************
      * Getters
      */
-    /*public BufferedImage getBufferedImage() {
-        return this.bufferedImage;
-    }*/
-
     public List<GuiShapeDataObject> getShapesToDraw() {
         return imageRenderer.getShapesToDraw();
     }
@@ -69,6 +66,13 @@ public class Gui extends JFrame {
         return mouseY;
     }
 
+    public int getMouseDownX() {
+        return mouseDownX;
+    }
+
+    public int getMouseDownY() {
+        return mouseDownY;
+    }
 
     /*******************************************************************************************************************
      * Setters
@@ -93,6 +97,7 @@ public class Gui extends JFrame {
      * Adds Event Listeners
      */
     private void addListeners() {
+
         // When mouse is moved
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
@@ -103,12 +108,30 @@ public class Gui extends JFrame {
             }
         });
 
+        // When mouse is pressed down
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // TODO
+                mouseDownX = e.getX();
+                mouseDownY = e.getY();
+                flashcardApplication.mousePressedEvent(currentJframe);
+            }
+        });
+
+        // When Mouse is Clicked
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // TODO
+                flashcardApplication.mouseClickEvent(currentJframe);
+            }
+        });
+
         // When Window is Resized
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                int width = getWidth();
-                int height = getHeight();
                 flashcardApplication.windowSizeChangeEvent(currentJframe);
             }
         });

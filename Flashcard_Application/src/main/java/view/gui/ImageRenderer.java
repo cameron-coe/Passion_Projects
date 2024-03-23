@@ -88,7 +88,7 @@ public class ImageRenderer {
         File imageSource = new File(filePath);
 
         try {
-            // ImageIO.read() handles opening and closing the datastream.
+            // ImageIO.read() also handles opening and closing the data stream.
             image = ImageIO.read(imageSource);
         } catch (IOException e) {
             e.printStackTrace();
