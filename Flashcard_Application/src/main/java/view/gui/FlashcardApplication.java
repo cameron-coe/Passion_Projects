@@ -1,13 +1,12 @@
 package main.java.view.gui;
 
 
-import main.java.view.gui.shapes.*;
+import main.java.view.gui.shapes.GuiShapeDataObject;
+
 import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 
 /**
- * TODO: Encapsulate Drawing the frame
  * TODO: Resize Text With Window
  * TODO: Add Application Pages
  * TODO: Make buttons that click and return a value
@@ -19,7 +18,6 @@ public class FlashcardApplication {
     /*******************************************************************************************************************
      * Constants
      */
-    private final static Color BACKGROUND_COLOR = new Color(255, 222, 191);
     private final static String HOMEPAGE = "homepage";
 
 
@@ -53,6 +51,14 @@ public class FlashcardApplication {
 
 
     /*******************************************************************************************************************
+     * Runtime Method
+     */
+    public void run () {
+        //
+    }
+
+
+    /*******************************************************************************************************************
      * Subscribes Event Actions to Listeners
      */
     public void runtimeStartEvent(JFrame jFrame) {
@@ -70,43 +76,39 @@ public class FlashcardApplication {
     }
 
     public void mouseMoveEvent(JFrame jFrame) {
-        buttonManager.updateButtonsWhenMouseGoesInOrOut(gui, guiEvents);
+        boolean isUpdate = buttonManager.updateButtonsWhenMouseGoesInOrOut(gui, guiEvents);
+        if (isUpdate) {
+            gui.repaint();
+        }
 
         List<GuiShapeDataObject> shapesToDraw = guiEvents.windowUpdateEvent(jFrame);
         System.out.println("MOUSE MOVE EVENT >>> " + shapesToDraw.size());
     }
 
     public void mousePressedEvent(JFrame jFrame) {
+        boolean isAButtonPressed = buttonManager.mouseDownOnButton(guiEvents);
+        if (isAButtonPressed) {
+            gui.repaint();
+        }
+
         List<GuiShapeDataObject> shapesToDraw = guiEvents.windowUpdateEvent(jFrame);
         System.out.println("MOUSE PRESSED EVENT >>> " + shapesToDraw.size());
     }
 
-    public void mouseClickEvent(JFrame jFrame) {
+    public void mouseReleasedEvent(JFrame jFrame) {
+        String result = buttonManager.mouseReleasedOnButton(gui);
+
+        if (result != null) {
+            gui.repaint();
+        }
+
+        // Makes sure all shapes are prepped to be redrawn
         List<GuiShapeDataObject> shapesToDraw = guiEvents.windowUpdateEvent(jFrame);
-        System.out.println("MOUSE CLICK EVENT >>> " + shapesToDraw.size());
+        gui.setShapesToDraw(shapesToDraw);
+
+        System.out.println("MOUSE RELEASED EVENT >>> " + result);
     }
 
-
-    /*******************************************************************************************************************
-     * Runtime Method
-     */
-    public void run () {
-        //
-    }
-
-
-    /*******************************************************************************************************************
-     * Button Pressed Method -- Gives behaviors to all buttons
-     */
-    public void buttonPress(String buttonId) {
-
-    }
-
-
-
-    /*******************************************************************************************************************
-     * Checks if mouse if over a button
-     */
 
 
 }

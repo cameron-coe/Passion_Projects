@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageRenderer {
+public class GraphicsRenderer {
 
     /*******************************************************************************************************************
      *Constants
@@ -31,7 +31,7 @@ public class ImageRenderer {
     /*******************************************************************************************************************
      * Constructor
      */
-    public ImageRenderer(JFrame jFrame) {
+    public GraphicsRenderer(JFrame jFrame) {
         this.shapesToDraw = new ArrayList<>();
 
         // Create image buffer for jFrame
@@ -327,8 +327,6 @@ public class ImageRenderer {
         }
 
 
-
-
         BufferedImage bi = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = (Graphics2D) bi.getGraphics();
         //g.drawImage(image, 0, 0, null);
@@ -354,10 +352,14 @@ public class ImageRenderer {
         int arc = shape.getArc();
 
         // Draws the Shape Fill
-        GuiButtonDataObject button = (GuiButtonDataObject) shape;
-        if(button.isMouseOver()) {
-            bufferedGraphics2D.setColor(button.getHoverColor());
+        if(((GuiButtonDataObject) shape).isMousePressed()) {
+            // When button is pressed
+            bufferedGraphics2D.setColor(((GuiButtonDataObject) shape).getPressedColor());
+        } else if(((GuiButtonDataObject) shape).isMouseOver()) {
+            // When button is hovered over but not pressed
+            bufferedGraphics2D.setColor(((GuiButtonDataObject) shape).getHoverColor());
         } else {
+            // Default Color
             bufferedGraphics2D.setColor(shape.getFillColor());
         }
         bufferedGraphics2D.fillRoundRect(startX, startY, width, height, arc, arc);

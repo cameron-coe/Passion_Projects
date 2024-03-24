@@ -254,7 +254,10 @@ public class GuiEvents {
     public int updateButton2(String id, JFrame jFrame) {
         // Update
         int indexOfObject = indexOfGuiShapeById(id);
-        shapesToDraw.get(indexOfObject).setBounds(150, 50, 200, 100);
+        GuiButtonDataObject button = (GuiButtonDataObject) shapesToDraw.get(indexOfObject);
+        button.setBounds(150, 50, 200, 100);
+        button.setPressedColor(Color.BLACK);
+
 
         return indexOfObject;
     }

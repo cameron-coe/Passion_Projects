@@ -15,22 +15,15 @@ public class Gui extends JFrame {
      */
 
 
-
-
-
     /*******************************************************************************************************************
      * Instance Variables
      */
     private JFrame currentJframe = this;
     private FlashcardApplication flashcardApplication = new FlashcardApplication(this);
-    private ImageRenderer imageRenderer;
+    private GraphicsRenderer graphicsRenderer;
 
     private int mouseX = 0;
     private int mouseY = 0;
-    private int mouseDownX = 0;
-    private int mouseDownY = 0;
-
-
 
 
     /*******************************************************************************************************************
@@ -40,9 +33,9 @@ public class Gui extends JFrame {
         setTitle("The Flashcard App");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setSize(800, 450);  // Size needs to be set before the imageRenderer can render an image
-        imageRenderer = new ImageRenderer(this);
-        setIconImage(imageRenderer.loadImageFromImagesDirectory("AppIcon.png"));
+        setSize(800, 450);  // Size needs to be set before the graphicsRenderer can render an image
+        graphicsRenderer = new GraphicsRenderer(this);
+        setIconImage(graphicsRenderer.loadImageFromImagesDirectory("AppIcon.png"));
 
         flashcardApplication.runtimeStartEvent(this);
         addListeners();
@@ -55,7 +48,7 @@ public class Gui extends JFrame {
      * Getters
      */
     public List<GuiShapeDataObject> getShapesToDraw() {
-        return imageRenderer.getShapesToDraw();
+        return graphicsRenderer.getShapesToDraw();
     }
 
     public int getMouseX() {
@@ -66,19 +59,12 @@ public class Gui extends JFrame {
         return mouseY;
     }
 
-    public int getMouseDownX() {
-        return mouseDownX;
-    }
-
-    public int getMouseDownY() {
-        return mouseDownY;
-    }
 
     /*******************************************************************************************************************
      * Setters
      */
     public void setShapesToDraw (List<GuiShapeDataObject> shapes) {
-        imageRenderer.setShapesToDraw(shapes);
+        graphicsRenderer.setShapesToDraw(shapes);
     }
 
 
@@ -87,7 +73,7 @@ public class Gui extends JFrame {
      */
     @Override
     public void paint(Graphics graphics) {
-        BufferedImage image = imageRenderer.prepareBufferedGraphic(this);
+        BufferedImage image = graphicsRenderer.prepareBufferedGraphic(this);
         graphics.drawImage(image, 0, 0, null);
         System.out.println("Repaint!");
     }
@@ -106,25 +92,29 @@ public class Gui extends JFrame {
                 mouseY = e.getY();
                 flashcardApplication.mouseMoveEvent(currentJframe);
             }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                mouseX = e.getX();
+                mouseY = e.getY();
+                flashcardApplication.mouseMoveEvent(currentJframe);
+            }
         });
 
-        // When mouse is pressed down
+        // When mouse is pressed down or released
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 // TODO
-                mouseDownX = e.getX();
-                mouseDownY = e.getY();
                 flashcardApplication.mousePressedEvent(currentJframe);
             }
-        });
 
-        // When Mouse is Clicked
-        addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mouseReleased(MouseEvent e) {
                 // TODO
-                flashcardApplication.mouseClickEvent(currentJframe);
+                mouseX = e.getX();
+                mouseY = e.getY();
+                flashcardApplication.mouseReleasedEvent(currentJframe);
             }
         });
 

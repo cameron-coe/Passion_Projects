@@ -25,49 +25,65 @@ public class ButtonManager {
      * Update Buttons
      * Highlights buttons when the mouse hovers over them
      * Makes the active button the button being hovered over
+     * returns true if there is an update
      */
-    public void updateButtonsWhenMouseGoesInOrOut(Gui gui, GuiEvents guiEvents) {
+    public boolean updateButtonsWhenMouseGoesInOrOut(Gui gui, GuiEvents guiEvents) {
+        boolean isUpdate = false;
+
         // Button Activation
         hoveredOverButton = buttonTheMouseIsOver(gui, guiEvents);
         boolean isMouseOverAButton = hoveredOverButton != null;
 
-        // Repaints and updates when mouse enters the button
+
         if (isMouseOverAButton && !isMouseOverButtonState) {
+            // Repaints and updates when mouse enters the button
             isMouseOverButtonState = true;
             hoveredOverButton.setMouseOver(true);
-            gui.repaint();
+            isUpdate = true;
+        }
+        else if (!isMouseOverAButton && isMouseOverButtonState) {
+            // Repaints and updates when the mouse leaves the button
+            isMouseOverButtonState = false;
+            if (pressedDownButton != null) {
+                pressedDownButton.setMousePressed(false);
+                pressedDownButton.setMouseOver(false);
+                pressedDownButton = null;
+            }
+            isUpdate = true;
         }
 
-        // Repaints and updates when the mouse leaves the button
-        else if (!isMouseOverAButton && isMouseOverButtonState) {
-            isMouseOverButtonState = false;
-            gui.repaint();
-        }
+        return isUpdate;
     }
 
 
     /*******************************************************************************************************************
-     * When the mouse presses down on the button
+     * Sets pressedDownButton when the mouse presses down on the button
+     * returns true if pressed down on a button
      */
-    public void mouseDownOnButton(Gui gui, GuiEvents guiEvents) {
+    public boolean mouseDownOnButton(GuiEvents guiEvents) {
         if (hoveredOverButton != null) {
             pressedDownButton = hoveredOverButton;
-
-            // TODO: Check if hovered over button has the same id as the pressed down button
-
-            isMouseOverButtonState = false;  // Resets the state so the next method will update
-            updateButtonsWhenMouseGoesInOrOut(gui, guiEvents);
+            pressedDownButton.setMousePressed(true);
+            return true;
         }
-        //int mouseDownX = gui.getMouseDownX();
-        //int mouseDownY = gui.getMouseDownY();
+        return false;
     }
 
 
     /*******************************************************************************************************************
      * When the mouse completes a click on the button
      */
-    public void mouseClickOnButton() {
+    public String mouseReleasedOnButton(Gui gui) {
+        String result = null;
+        if (hoveredOverButton != null && pressedDownButton != null) {
+            if (hoveredOverButton.getShapeId().equals(pressedDownButton.getShapeId())) {
+                result = pressedDownButton.getShapeId();
+                pressedDownButton.setMousePressed(false);
+                pressedDownButton = null;
+            }
+        }
 
+        return result;
     }
 
 

@@ -8,7 +8,9 @@ public class GuiButtonDataObject extends GuiShapeDataObject {
      * Instance variables
      */
     private Color hoverColor = Color.RED;
+    private Color pressedColor = Color.YELLOW;
     private boolean isMouseOver = false;
+    private boolean isMousePressed = false;
 
 
     /*******************************************************************************************************************
@@ -32,6 +34,13 @@ public class GuiButtonDataObject extends GuiShapeDataObject {
         return isMouseOver;
     }
 
+    public Color getPressedColor() {
+        return pressedColor;
+    }
+
+    public boolean isMousePressed() {
+        return isMousePressed;
+    }
 
     /*******************************************************************************************************************
      * Setters
@@ -42,5 +51,13 @@ public class GuiButtonDataObject extends GuiShapeDataObject {
 
     public void setMouseOver(boolean mouseOver) {
         isMouseOver = mouseOver;
+    }
+
+    public void setPressedColor(Color pressedColor) {
+        this.pressedColor = pressedColor;
+    }
+
+    public void setMousePressed(boolean mousePressed) {
+        isMousePressed = mousePressed;
     }
 }
