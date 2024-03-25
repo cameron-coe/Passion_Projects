@@ -1,11 +1,11 @@
 package main.java.view.gui.shapes;
 
-public class GuiImageDataObject extends GuiShapeDataObject {
+public class GuiImage extends GuiShape {
 
     /*******************************************************************************************************************
      * Constructor
      */
-    public GuiImageDataObject(String id, String imageFileName, int point1X, int point1Y) {
+    public GuiImage(String id, String imageFileName, int point1X, int point1Y) {
         this.setShapeId(id);
         this.setBounds(point1X, point1Y, point1X, point1Y);
         this.setImageFileName(imageFileName);

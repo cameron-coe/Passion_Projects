@@ -2,7 +2,7 @@ package main.java.view.gui.shapes;
 
 import java.awt.*;
 
-public abstract class GuiShapeDataObject {
+public abstract class GuiShape {
 
     /*******************************************************************************************************************
      *Constants
@@ -23,7 +23,6 @@ public abstract class GuiShapeDataObject {
     private int point3Y;
     private  Color fillColor = DEFAULT_FILL;
     private  Color outlineColor = DEFAULT_OUTLINE;
-    private  Color textFillColor = DEFAULT_OUTLINE;
     private int outlineWidth = 2;
 
     private int arc;
@@ -37,7 +36,7 @@ public abstract class GuiShapeDataObject {
     /*******************************************************************************************************************
      * Constructor
      */
-    public GuiShapeDataObject() {
+    public GuiShape() {
 
     }
 
@@ -51,10 +50,6 @@ public abstract class GuiShapeDataObject {
 
     public void setOutlineColor(Color outlineColor) {
         this.outlineColor = outlineColor;
-    }
-
-    public void setTextFillColor(Color textFillColor) {
-        this.textFillColor = textFillColor;
     }
 
     public void setOutlineWidth(int outlineWidth) {
@@ -170,10 +165,6 @@ public abstract class GuiShapeDataObject {
 
     public Color getOutlineColor() {
         return outlineColor;
-    }
-
-    public Color getTextFillColor() {
-        return textFillColor;
     }
 
     public int getOutlineWidth() {

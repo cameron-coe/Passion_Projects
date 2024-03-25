@@ -47,7 +47,7 @@ public class Gui extends JFrame {
     /*******************************************************************************************************************
      * Getters
      */
-    public List<GuiShapeDataObject> getShapesToDraw() {
+    public List<GuiShape> getShapesToDraw() {
         return graphicsRenderer.getShapesToDraw();
     }
 
@@ -63,7 +63,7 @@ public class Gui extends JFrame {
     /*******************************************************************************************************************
      * Setters
      */
-    public void setShapesToDraw (List<GuiShapeDataObject> shapes) {
+    public void setShapesToDraw (List<GuiShape> shapes) {
         graphicsRenderer.setShapesToDraw(shapes);
     }
 

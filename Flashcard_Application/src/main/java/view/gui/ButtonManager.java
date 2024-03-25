@@ -1,7 +1,7 @@
 package main.java.view.gui;
 
-import main.java.view.gui.shapes.GuiButtonDataObject;
-import main.java.view.gui.shapes.GuiShapeDataObject;
+import main.java.view.gui.shapes.GuiButton;
+import main.java.view.gui.shapes.GuiShape;
 
 public class ButtonManager {
 
@@ -9,8 +9,8 @@ public class ButtonManager {
      * Instance Variables
      */
     private boolean isMouseOverButtonState = false;
-    private GuiButtonDataObject hoveredOverButton = null;
-    private GuiButtonDataObject pressedDownButton = null;
+    private GuiButton hoveredOverButton = null;
+    private GuiButton pressedDownButton = null;
 
 
     /*******************************************************************************************************************
@@ -27,11 +27,11 @@ public class ButtonManager {
      * Makes the active button the button being hovered over
      * returns true if there is an update
      */
-    public boolean updateButtonsWhenMouseGoesInOrOut(Gui gui, GuiEvents guiEvents) {
+    public boolean updateButtonsWhenMouseGoesInOrOut(Gui gui, GuiElements guiElements) {
         boolean isUpdate = false;
 
         // Button Activation
-        hoveredOverButton = buttonTheMouseIsOver(gui, guiEvents);
+        hoveredOverButton = buttonTheMouseIsOver(gui, guiElements);
         boolean isMouseOverAButton = hoveredOverButton != null;
 
 
@@ -60,7 +60,7 @@ public class ButtonManager {
      * Sets pressedDownButton when the mouse presses down on the button
      * returns true if pressed down on a button
      */
-    public boolean mouseDownOnButton(GuiEvents guiEvents) {
+    public boolean mouseDownOnButton(GuiElements guiElements) {
         if (hoveredOverButton != null) {
             pressedDownButton = hoveredOverButton;
             pressedDownButton.setMousePressed(true);
@@ -89,19 +89,19 @@ public class ButtonManager {
 
     /*******************************************************************************************************************
      * Check if the mouse is over a button
-     * return the button it's over as a GuiButtonDataObject
+     * return the button it's over as a GuiButton
      */
-    private GuiButtonDataObject buttonTheMouseIsOver(Gui gui, GuiEvents guiEvents) {
-        for (GuiShapeDataObject shape : guiEvents.getShapesToDraw()) {
-            if (shape instanceof GuiButtonDataObject) {
+    private GuiButton buttonTheMouseIsOver(Gui gui, GuiElements guiElements) {
+        for (GuiShape shape : guiElements.getShapesToDraw()) {
+            if (shape instanceof GuiButton) {
                 int mouseX = gui.getMouseX();
                 int mouseY = gui.getMouseY();
 
                 // Checks if mouse is inside button
                 if (mouseX > shape.getPoint1X() && mouseX < shape.getPoint2X() && mouseY > shape.getPoint1Y() && mouseY < shape.getPoint2Y()) {
-                    return (GuiButtonDataObject) shape;
+                    return (GuiButton) shape;
                 } else {
-                    ((GuiButtonDataObject) shape).setMouseOver(false);
+                    ((GuiButton) shape).setMouseOver(false);
                 }
             }
         }

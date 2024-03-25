@@ -7,28 +7,35 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiEvents {
+public class GuiElements {
+
+    /*******************************************************************************************************************
+     * Constants
+     */
+    final String FLASHCARD_BASE_ID = "flashcardBase";
+    final String FLASHCARD_BORDER_ID = "flashcardBorder";
+    final String FLASHCARD_HEADER_ID = "flashcardQuestionNumber";
+    final String FLASHCARD_FRONT_TEXT_ID = "flashcardFrontText";
+    final String FLASHCARD_FRONT_TEXT_LINES_ID = "flashcardFrontTextLines";
+    // final String FLASHCARD_BACK_TEXT_ID = "flashcardBackText";
+
+    final String PAGE_HEADER_ID = "pageHeader";
+
+    static final String SUBJECT_PAGE_BUTTON_ID = "subjectPageButton";
+    static final String SELECT_SUBJECT_BUTTON_ID = "selectSubjectButton";
+
+
 
     /*******************************************************************************************************************
      * Instance Variables
      */
-    private List<GuiShapeDataObject> shapesToDraw;
-
-    String flashcardBaseId = "flashcardBase";
-    String borderId = "flashcardBorder";
-    String cardHeaderId = "flashcardQuestionNumber";
-    String frontTextId = "flashcardFrontText";
-    String frontTextLinesId = "flashcardFrontTextLines";
-    //String backTextId = "flashcardBackText";
-
-    String testButtonId = "testButton";
-    String testButton2Id = "testButton2";
+    private List<GuiShape> shapesToDraw;
 
 
     /*******************************************************************************************************************
      * Constructor
      */
-    public GuiEvents() {
+    public GuiElements() {
         this.shapesToDraw = new ArrayList<>();
     }
 
@@ -36,91 +43,43 @@ public class GuiEvents {
     /*******************************************************************************************************************
      * Getter
      */
-    public List<GuiShapeDataObject> getShapesToDraw() {
+    public List<GuiShape> getShapesToDraw() {
         return shapesToDraw;
     }
 
-    /*******************************************************************************************************************
-     * Event Methods
-     */
-    public List<GuiShapeDataObject> runtimeStartEvent(JFrame jFrame) {
-        instantiateFlashcard();
-        updateFlashcard(jFrame);
-
-        // TODO - Remove test buttons
-        instantiateButton(testButtonId);
-        instantiateButton2(testButton2Id);
-        updateButton(testButtonId, jFrame);
-        updateButton2(testButton2Id, jFrame);
-
-        return this.shapesToDraw;
-    }
-
-    public List<GuiShapeDataObject> windowUpdateEvent(JFrame jFrame) {
-        updateFlashcard(jFrame);
-        return this.shapesToDraw;
-    }
-
 
     /*******************************************************************************************************************
-     * Instantiate Pages
+     * Setter
      */
-    private void instantiateFlashcardPage() {
-
-    }
-
-
-    /*******************************************************************************************************************
-     * Update Pages
-     */
-
-
-
-
-    private void addHomepageTitle(JFrame jFrame) {
-        int leftSpacing = 10;
-        int rightSpacing = jFrame.getWidth() - leftSpacing - 7;
-
-
-        String homepageTitleId = "homepageTitle";
-        if (shapesToDrawListContainsId(homepageTitleId)) {
-            // Update
-            int indexOfObject = indexOfGuiShapeById(homepageTitleId);
-            shapesToDraw.get(indexOfObject).setBounds(leftSpacing, 50, rightSpacing, 100);
-        } else {
-            // Instantiate
-            String longString = "Homepage Homepage Homepage Homepage Homepage Homepage Homepage ";
-            GuiShapeDataObject homepageTitle = new GuiTextBoxDataObject(homepageTitleId, longString, leftSpacing, 50, rightSpacing, 100);
-            homepageTitle.setTextFillColor(Color.red);
-            shapesToDraw.add(homepageTitle);
-        }
+    public void setShapesToDraw(List<GuiShape> shapesToDraw) {
+        this.shapesToDraw = shapesToDraw;
     }
 
 
     /*******************************************************************************************************************
      * Update Groups
      */
-    private void updateFlashcard(JFrame jFrame) {
-        int indexOfFlashcardBase = updateFlashcardBase(flashcardBaseId, jFrame);
-        GuiShapeDataObject flashcardBase = shapesToDraw.get(indexOfFlashcardBase);
+    public void updateFlashcard(JFrame jFrame) {
+        int indexOfFlashcardBase = updateFlashcardBase(FLASHCARD_BASE_ID, jFrame);
+        GuiShape flashcardBase = shapesToDraw.get(indexOfFlashcardBase);
 
-        updateFlashcardHeader(cardHeaderId, flashcardBase);
-        updateFlashcardBorder(borderId, flashcardBase);
-        updateFlashcardTextLines(frontTextLinesId, flashcardBase);
-        updateFlashcardFrontText(frontTextId, flashcardBase);
+        updateFlashcardHeader(FLASHCARD_HEADER_ID, flashcardBase);
+        updateFlashcardBorder(FLASHCARD_BORDER_ID, flashcardBase);
+        updateFlashcardTextLines(FLASHCARD_FRONT_TEXT_LINES_ID, flashcardBase);
+        updateFlashcardFrontText(FLASHCARD_FRONT_TEXT_ID, flashcardBase);
     }
 
 
     /*******************************************************************************************************************
      * Instantiate Groups
      */
-    private void instantiateFlashcard() {
+    public void instantiateFlashcard() {
         // Instantiate
-        instantiateFlashcardBase(flashcardBaseId);
-        instantiateFlashcardHeader(cardHeaderId);
-        instantiateFlashcardTextLines(frontTextLinesId);
-        instantiateFlashcardBorder(borderId);
-        instantiateFrontCardText(frontTextId);
+        instantiateFlashcardBase(FLASHCARD_BASE_ID);
+        instantiateFlashcardHeader(FLASHCARD_HEADER_ID);
+        instantiateFlashcardTextLines(FLASHCARD_FRONT_TEXT_LINES_ID);
+        instantiateFlashcardBorder(FLASHCARD_BORDER_ID);
+        instantiateFrontCardText(FLASHCARD_FRONT_TEXT_ID);
     }
 
 
@@ -129,48 +88,51 @@ public class GuiEvents {
     /*******************************************************************************************************************
      * Instantiate GUI Shapes
      */
+    public void instantiateSubjectPageHeader() {
+        GuiShape subjectPageHeader = new GuiTextBox(PAGE_HEADER_ID, "Select a Subject", 0, 0, 0, 0);
+        subjectPageHeader.setFillColor(Color.BLACK);
+        shapesToDraw.add(subjectPageHeader);
+    }
+
+
     private void instantiateFlashcardBase(String id) {
-        GuiShapeDataObject flashcardBase = new GuiRoundedRectangleDataObject(id, 0, 0, 0, 0, 25);
+        GuiShape flashcardBase = new GuiRoundedRectangle(id, 0, 0, 0, 0, 25);
         flashcardBase.setFillColor(Color.WHITE);
         flashcardBase.noOutline();
         shapesToDraw.add(flashcardBase);
     }
 
     public void instantiateFlashcardHeader(String id) {
-        GuiShapeDataObject cardHeader = new GuiTextBoxDataObject(id, "For 3 Points:", 0, 0, 0, 0);
-        cardHeader.setTextFillColor(Color.BLACK);
+        GuiShape cardHeader = new GuiTextBox(id, "For 3 Points:", 0, 0, 0, 0);
+        cardHeader.setFillColor(Color.BLACK);
         shapesToDraw.add(cardHeader);
     }
 
     private void instantiateFlashcardBorder(String id) {
-        GuiShapeDataObject flashcardBase = new GuiRoundedRectangleDataObject(id, 0, 0, 0, 0, 0);
+        GuiShape flashcardBase = new GuiRoundedRectangle(id, 0, 0, 0, 0, 0);
         flashcardBase.setOutlineColor(Color.ORANGE);
         flashcardBase.noFill();
         shapesToDraw.add(flashcardBase);
     }
 
     private void instantiateFlashcardTextLines(String id) {
-        GuiShapeDataObject frontTextLines = new GuiTextBoxLinesDataObject(id, 0, 0, 0, 0);
+        GuiShape frontTextLines = new GuiTextBoxLines(id, 0, 0, 0, 0);
         frontTextLines.setOutlineColor(new Color(0,0, 255, 100));
         frontTextLines.setOutlineWidth(1);
         shapesToDraw.add(frontTextLines);
     }
 
     private void instantiateFrontCardText(String id) {
-        GuiShapeDataObject frontText = new GuiTextBoxDataObject(id, "", 0, 0, 0, 0);
-        frontText.setTextFillColor(Color.BLACK);
+        GuiShape frontText = new GuiTextBox(id, "", 0, 0, 0, 0);
+        frontText.setFillColor(Color.BLACK);
         shapesToDraw.add(frontText);
     }
 
-    private void instantiateButton(String id) {
-        GuiShapeDataObject button = new GuiButtonDataObject(id, 0, 0, 0, 0, 25);
+    public void instantiateStartButton() {
+        GuiShape button = new GuiButton(SUBJECT_PAGE_BUTTON_ID, 0, 0, 0, 0, 25);
         button.setFillColor(Color.cyan);
-        shapesToDraw.add(button);
-    }
-
-    private void instantiateButton2(String id) {
-        GuiShapeDataObject button = new GuiButtonDataObject(id, 0, 0, 0, 0, 25);
-        button.setFillColor(Color.cyan);
+        ((GuiButton)button).setHoverColor(Color.YELLOW);
+        ((GuiButton)button).setPressedColor(Color.GREEN);
         shapesToDraw.add(button);
     }
 
@@ -178,6 +140,12 @@ public class GuiEvents {
     /*******************************************************************************************************************
      * Update GUI Shapes
      */
+    public void updatePageHeader(JFrame jFrame) {
+        int indexOfPageHeader = indexOfGuiShapeById(PAGE_HEADER_ID);
+        shapesToDraw.get(indexOfPageHeader).setBounds(0, 50, jFrame.getWidth(), 150);
+    }
+
+
     public int updateFlashcardBase(String id, JFrame jFrame) {
         int cardHeight = jFrame.getHeight() - 200;
         int cardWidth = (cardHeight * 5) / 3;
@@ -195,7 +163,7 @@ public class GuiEvents {
         return indexOfFlashcardBase;
     }
 
-    public void updateFlashcardHeader(String id, GuiShapeDataObject flashcardBase) {
+    public void updateFlashcardHeader(String id, GuiShape flashcardBase) {
         double flashcardBaseWidth = flashcardBase.getPoint2X() - flashcardBase.getPoint1X();
         double marginWidth = flashcardBaseWidth * 0.02;
 
@@ -208,7 +176,7 @@ public class GuiEvents {
         shapesToDraw.get(indexOfHeader).setBounds(startX, startY, endX, endY);
     }
 
-    public void updateFlashcardTextLines(String id, GuiShapeDataObject flashcardBase) {
+    public void updateFlashcardTextLines(String id, GuiShape flashcardBase) {
         double flashcardBaseWidth = flashcardBase.getPoint2X() - flashcardBase.getPoint1X();
         double marginWidth = flashcardBaseWidth * 0.02;
 
@@ -221,7 +189,7 @@ public class GuiEvents {
         shapesToDraw.get(indexOfTextLines).setBounds(startX, startY, endX, endY);
     }
 
-    public void updateFlashcardBorder(String id, GuiShapeDataObject flashcardBase) {
+    public void updateFlashcardBorder(String id, GuiShape flashcardBase) {
         double flashcardBaseWidth = flashcardBase.getPoint2X() - flashcardBase.getPoint1X();
         double marginWidth = flashcardBaseWidth * 0.02;
         int arc = (int) (flashcardBase.getArc() * 0.9);
@@ -236,31 +204,26 @@ public class GuiEvents {
         shapesToDraw.get(indexOfBorder).setArc(arc);
     }
 
-    public void updateFlashcardFrontText(String id, GuiShapeDataObject flashcardBase) {
+    public void updateFlashcardFrontText(String id, GuiShape flashcardBase) {
         // Inherits properties of The Text Lines for simplicity
         updateFlashcardTextLines(id, flashcardBase);
         int indexOfText = indexOfGuiShapeById(id);
         shapesToDraw.get(indexOfText).setText("The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog. The quick brown fox jumped over the lazy dog.");
     }
 
-    public int updateButton(String id, JFrame jFrame) {
+    public int updateStartButton(JFrame jFrame) {
         // Update
-        int indexOfObject = indexOfGuiShapeById(id);
-        shapesToDraw.get(indexOfObject).setBounds(50, 50, 100, 100);
+        int startX = (int) (0.2 * jFrame.getWidth());
+        int endX = jFrame.getWidth() - startX;
+        int startY = jFrame.getHeight() - 150;
+        int endY = startY + 75;
+
+        int indexOfObject = indexOfGuiShapeById(SUBJECT_PAGE_BUTTON_ID);
+        shapesToDraw.get(indexOfObject).setBounds(startX, startY, endX, endY);
 
         return indexOfObject;
     }
 
-    public int updateButton2(String id, JFrame jFrame) {
-        // Update
-        int indexOfObject = indexOfGuiShapeById(id);
-        GuiButtonDataObject button = (GuiButtonDataObject) shapesToDraw.get(indexOfObject);
-        button.setBounds(150, 50, 200, 100);
-        button.setPressedColor(Color.BLACK);
-
-
-        return indexOfObject;
-    }
 
 
 
@@ -270,7 +233,7 @@ public class GuiEvents {
      * Getting Values from the ShapesToDraw List
      */
     private boolean shapesToDrawListContainsId(String id) {
-        for (GuiShapeDataObject shape : this.shapesToDraw) {
+        for (GuiShape shape : this.shapesToDraw) {
             String shapeId = shape.getShapeId();
             if (shapeId != null) {
                 if (shapeId.equals(id)) {
@@ -283,7 +246,7 @@ public class GuiEvents {
 
     private int indexOfGuiShapeById(String id) {
         for (int i = 0; i < this.shapesToDraw.size(); i++) {
-            GuiShapeDataObject shape = this.shapesToDraw.get(i);
+            GuiShape shape = this.shapesToDraw.get(i);
             String shapeId = shape.getShapeId();
             if (shapeId != null) {
                 if (shapeId.equals(id)) {

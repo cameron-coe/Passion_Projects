@@ -23,7 +23,7 @@ public class GraphicsRenderer {
     /*******************************************************************************************************************
      * Instance Variables
      */
-    private List<GuiShapeDataObject> shapesToDraw;
+    private List<GuiShape> shapesToDraw;
     private Graphics2D bufferedGraphics2D;
     private BufferedImage bufferedImage;
 
@@ -43,7 +43,7 @@ public class GraphicsRenderer {
     /*******************************************************************************************************************
      * Getters
      */
-    public List<GuiShapeDataObject> getShapesToDraw() {
+    public List<GuiShape> getShapesToDraw() {
         return shapesToDraw;
     }
 
@@ -51,7 +51,7 @@ public class GraphicsRenderer {
     /*******************************************************************************************************************
      * Setters
      */
-    public void setShapesToDraw(List<GuiShapeDataObject> shapesToDraw) {
+    public void setShapesToDraw(List<GuiShape> shapesToDraw) {
         this.shapesToDraw = shapesToDraw;
     }
 
@@ -102,30 +102,30 @@ public class GraphicsRenderer {
      * Draw Shapes
      */
     private void drawAllShapes() {
-        for (GuiShapeDataObject shape : shapesToDraw) {
-            if (shape instanceof GuiRectangleDataObject) {
+        for (GuiShape shape : shapesToDraw) {
+            if (shape instanceof GuiRectangle) {
                 drawRectangle(shape);
             }
-            else if (shape instanceof GuiEllipseDataObject) {
+            else if (shape instanceof GuiEllipse) {
                 drawEllipse(shape);
             }
-            else if (shape instanceof GuiRoundedRectangleDataObject) {
+            else if (shape instanceof GuiRoundedRectangle) {
                 drawRoundedRectangle(shape);
             }
-            else if (shape instanceof GuiLineDataObject) {
+            else if (shape instanceof GuiLine) {
                 drawLine(shape);
             }
-            else if (shape instanceof GuiTextBoxDataObject) {
+            else if (shape instanceof GuiTextBox) {
                 drawTextBox(shape);
                 drawTextBox(shape); // Drawn twice to make the text more clear
             }
-            else if (shape instanceof GuiTextBoxLinesDataObject) {
+            else if (shape instanceof GuiTextBoxLines) {
                 drawTextBoxLines(shape);
             }
-            else if (shape instanceof GuiImageDataObject) {
+            else if (shape instanceof GuiImage) {
                 drawImage(shape);
             }
-            else if (shape instanceof GuiButtonDataObject) {
+            else if (shape instanceof GuiButton) {
                 drawButton(shape);
             }
         }
@@ -138,7 +138,7 @@ public class GraphicsRenderer {
         bufferedGraphics2D.fillRect(0, 0, width, height);
     }
 
-    private void drawRectangle(GuiShapeDataObject shape) {
+    private void drawRectangle(GuiShape shape) {
         int startX = shape.getPoint1X();
         int startY = shape.getPoint1Y();
         int width = shape.getPoint2X() - shape.getPoint1X();
@@ -154,7 +154,7 @@ public class GraphicsRenderer {
         bufferedGraphics2D.drawRect(startX, startY, width, height);
     }
 
-    private void drawEllipse(GuiShapeDataObject shape) {
+    private void drawEllipse(GuiShape shape) {
         int startX = shape.getPoint1X();
         int startY = shape.getPoint1Y();
         int width = shape.getPoint2X() - shape.getPoint1X();
@@ -170,7 +170,7 @@ public class GraphicsRenderer {
         bufferedGraphics2D.drawOval(startX, startY, width, height);
     }
 
-    private void drawRoundedRectangle(GuiShapeDataObject shape) {
+    private void drawRoundedRectangle(GuiShape shape) {
         int startX = shape.getPoint1X();
         int startY = shape.getPoint1Y();
         int width = shape.getPoint2X() - shape.getPoint1X();
@@ -187,7 +187,7 @@ public class GraphicsRenderer {
         bufferedGraphics2D.drawRoundRect(startX, startY, width, height, arc, arc);
     }
 
-    private void drawLine(GuiShapeDataObject shape) {
+    private void drawLine(GuiShape shape) {
         int startX = shape.getPoint1X();
         int startY = shape.getPoint1Y();
         int endX = shape.getPoint2X();
@@ -199,7 +199,7 @@ public class GraphicsRenderer {
         bufferedGraphics2D.drawLine(startX, startY, endX, endY);
     }
 
-    private void drawTextBox (GuiShapeDataObject shape) {
+    private void drawTextBox (GuiShape shape) {
         int startX = shape.getPoint1X();
         int startY = shape.getPoint1Y();
         int width = shape.getPoint2X() - shape.getPoint1X();
@@ -219,7 +219,7 @@ public class GraphicsRenderer {
         startY += textHeight;
 
         // Set the text Fill Color
-        bufferedGraphics2D.setColor( shape.getTextFillColor() );
+        bufferedGraphics2D.setColor( shape.getFillColor() );
 
         // Wrap Text
         String[] words = text.split(" ");
@@ -291,7 +291,7 @@ public class GraphicsRenderer {
         }
     }
 
-    private void drawTextBoxLines(GuiShapeDataObject shape) {
+    private void drawTextBoxLines(GuiShape shape) {
         int startY = shape.getPoint1Y();
         int endY = shape.getPoint2Y();
 
@@ -309,7 +309,7 @@ public class GraphicsRenderer {
         }
     }
 
-    private void drawImage(GuiShapeDataObject shape) {
+    private void drawImage(GuiShape shape) {
         BufferedImage image = (BufferedImage) loadImageFromImagesDirectory(shape.getImageFileName() );
         int imageWidth = image.getWidth();
         int imageHeight = image.getHeight();
@@ -344,7 +344,7 @@ public class GraphicsRenderer {
         bufferedGraphics2D.drawImage(bi, rescaleOp, imageStartX, imageStartY);
     }
 
-    private void drawButton(GuiShapeDataObject shape) {
+    private void drawButton(GuiShape shape) {
         int startX = shape.getPoint1X();
         int startY = shape.getPoint1Y();
         int width = shape.getPoint2X() - shape.getPoint1X();
@@ -352,12 +352,12 @@ public class GraphicsRenderer {
         int arc = shape.getArc();
 
         // Draws the Shape Fill
-        if(((GuiButtonDataObject) shape).isMousePressed()) {
+        if(((GuiButton) shape).isMousePressed()) {
             // When button is pressed
-            bufferedGraphics2D.setColor(((GuiButtonDataObject) shape).getPressedColor());
-        } else if(((GuiButtonDataObject) shape).isMouseOver()) {
+            bufferedGraphics2D.setColor(((GuiButton) shape).getPressedColor());
+        } else if(((GuiButton) shape).isMouseOver()) {
             // When button is hovered over but not pressed
-            bufferedGraphics2D.setColor(((GuiButtonDataObject) shape).getHoverColor());
+            bufferedGraphics2D.setColor(((GuiButton) shape).getHoverColor());
         } else {
             // Default Color
             bufferedGraphics2D.setColor(shape.getFillColor());
