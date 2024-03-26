@@ -24,7 +24,8 @@ public class CollectionManager {
         this.subjectList = new ArrayList<>();
         this.saveAndLoadObject = new SaveAndLoad();
 
-        this.saveAndLoadObject.loadSaveData();
+        //this.saveAndLoadObject.loadSaveData();
+        loadData();
     }
 
 
@@ -91,7 +92,7 @@ public class CollectionManager {
     }
 
     public void loadData() {
-        GameDataDto gameData =saveAndLoadObject.loadSaveData();
+        GameDataDto gameData = saveAndLoadObject.loadSaveData();
         this.totalScore = gameData.getTotalScore();
         this.subjectList = gameData.getSubjectList();
     }

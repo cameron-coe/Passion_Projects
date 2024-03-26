@@ -42,9 +42,9 @@ public class SaveAndLoad {
                 gameData = textToGameDataObject(currentLine); // Turns text into the data
             }
         } catch (FileNotFoundException e) {
-            System.err.println("File not found.");
+            System.err.println("File not found when loading save file");
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.err.println("Array out of bounds.");
+            System.err.println("Array out of bounds when reading save file");
         }
 
         return gameData;

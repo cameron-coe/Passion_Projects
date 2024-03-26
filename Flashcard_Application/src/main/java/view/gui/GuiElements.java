@@ -1,5 +1,7 @@
 package main.java.view.gui;
 
+import main.java.model.Deck;
+import main.java.model.Subject;
 import main.java.view.gui.shapes.*;
 
 import javax.swing.*;
@@ -23,6 +25,10 @@ public class GuiElements {
 
     static final String SUBJECT_PAGE_BUTTON_ID = "subjectPageButton";
     static final String SELECT_SUBJECT_BUTTON_ID = "selectSubjectButton";
+    private static final String SELECT_SUBJECT_BUTTON_TEXT_ID = "selectSubjectButtonText";
+
+    static final String SELECT_DECK_BUTTON_ID = "selectDeckButton";
+    private static final String SELECT_DECK_BUTTON_TEXT_ID = "selectDeckButtonText";
 
 
 
@@ -86,7 +92,7 @@ public class GuiElements {
 
 
     /*******************************************************************************************************************
-     * Instantiate GUI Shapes
+     * Instantiate Headers
      */
     public void instantiateSubjectPageHeader() {
         GuiShape subjectPageHeader = new GuiTextBox(PAGE_HEADER_ID, "Select a Subject", 0, 0, 0, 0);
@@ -94,7 +100,153 @@ public class GuiElements {
         shapesToDraw.add(subjectPageHeader);
     }
 
+    public void instantiateCurrentSubjectPageHeader(Subject subject) {
+        GuiShape subjectPageHeader = new GuiTextBox(PAGE_HEADER_ID, subject.getName(), 0, 0, 0, 0);
+        subjectPageHeader.setFillColor(Color.BLACK);
+        shapesToDraw.add(subjectPageHeader);
+    }
 
+    /*******************************************************************************************************************
+     * Update Headers
+     */
+    public void updatePageHeader(JFrame jFrame) {
+        int indexOfPageHeader = indexOfGuiShapeById(PAGE_HEADER_ID);
+        shapesToDraw.get(indexOfPageHeader).setBounds(0, 50, jFrame.getWidth(), 150);
+    }
+
+
+    /*******************************************************************************************************************
+     * Instantiate Subject Selection Button Elements
+     */
+    public void instantiateSubjectSelectionButtons(List<Subject> subjects) {
+        for(int i = 0; i < subjects.size(); i++) {
+            String uniqueButtonId = SELECT_SUBJECT_BUTTON_ID + i;
+            String uniqueButtonTextId = SELECT_SUBJECT_BUTTON_TEXT_ID + i;
+            instantiateSubjectButton(uniqueButtonId);
+            instantiateSubjectButtonText(uniqueButtonTextId, subjects.get(i));
+        }
+    }
+
+    private void instantiateSubjectButton(String id) {
+        GuiShape button = new GuiButton(id, 0, 0, 0, 0, 25);
+        button.setFillColor(Color.magenta);
+        ((GuiButton)button).setHoverColor(Color.YELLOW);
+        ((GuiButton)button).setPressedColor(Color.GREEN);
+        shapesToDraw.add(button);
+    }
+
+    private void instantiateSubjectButtonText(String id, Subject subject) {
+        GuiShape text = new GuiTextBox(id, subject.getName(), 0, 0, 0, 0);
+        text.setFillColor(Color.BLACK);
+        shapesToDraw.add(text);
+    }
+
+
+    /*******************************************************************************************************************
+     * Update Subject Selection Buttons
+     */
+    public void updateSubjectSelectionButtons(JFrame jFrame, List<Subject> subjects) {
+        for(int i = 0; i < subjects.size(); i++) {
+            updateSubjectButton(jFrame, i);
+            updateSubjectButtonText(i);
+        }
+    }
+
+    private void updateSubjectButton(JFrame jFrame, int index) {
+        String uniqueId = SELECT_SUBJECT_BUTTON_ID + index;
+        formatSelectionButtons(jFrame, index, uniqueId);
+    }
+
+    private void updateSubjectButtonText(int index) {
+        String baseButtonId = SELECT_SUBJECT_BUTTON_ID + index;
+        String uniqueButtonTextId = SELECT_SUBJECT_BUTTON_TEXT_ID + index;
+
+        formatSelectionButtons(baseButtonId, uniqueButtonTextId);
+    }
+
+
+    /*******************************************************************************************************************
+     * Instantiate Deck Selection Button Elements
+     */
+    public void instantiateDeckSelectionButtons(List<Deck> decks) {
+        for(int i = 0; i < decks.size(); i++) {
+            String uniqueButtonId = SELECT_DECK_BUTTON_ID + i;
+            String uniqueButtonTextId = SELECT_DECK_BUTTON_TEXT_ID + i;
+            instantiateDeckButton(uniqueButtonId);
+            instantiateDeckButtonText(uniqueButtonTextId, decks.get(i));
+        }
+    }
+
+    private void instantiateDeckButton(String id) {
+        GuiShape button = new GuiButton(id, 0, 0, 0, 0, 25);
+        button.setFillColor(Color.BLUE);
+        ((GuiButton)button).setHoverColor(Color.YELLOW);
+        ((GuiButton)button).setPressedColor(Color.GREEN);
+        shapesToDraw.add(button);
+    }
+
+    private void instantiateDeckButtonText(String id, Deck deck) {
+        GuiShape text = new GuiTextBox(id, deck.getDeckName(), 0, 0, 0, 0);
+        text.setFillColor(Color.BLACK);
+        shapesToDraw.add(text);
+    }
+
+    /*******************************************************************************************************************
+     * Update Deck Selection Buttons
+     */
+    public void updateDeckSelectionButtons(JFrame jFrame, List<Deck> decks) {
+        for(int i = 0; i < decks.size(); i++) {
+            updateDeckButton(jFrame, i);
+            updateDeckButtonText(i);
+        }
+    }
+
+    private void updateDeckButton(JFrame jFrame, int index) {
+        String uniqueId = SELECT_DECK_BUTTON_ID + index;
+        formatSelectionButtons(jFrame, index, uniqueId);
+    }
+
+    private void updateDeckButtonText(int index) {
+        String baseButtonId = SELECT_DECK_BUTTON_ID + index;
+        String uniqueButtonTextId = SELECT_DECK_BUTTON_TEXT_ID + index;
+
+        formatSelectionButtons(baseButtonId, uniqueButtonTextId);
+    }
+
+
+    /*******************************************************************************************************************
+     * Format Selection Buttons
+     */
+    private void formatSelectionButtons(JFrame jFrame, int index, String id) {
+        double buttonWidth = jFrame.getWidth() / 4;
+
+        int startX = (int) ((jFrame.getWidth()/2) - (buttonWidth/2) + (((index%3)-1) * jFrame.getWidth() / 3));
+        int endX = (int) (startX + buttonWidth);
+        int startY = 200 + ((index/3) * (jFrame.getHeight() / 4));
+        int endY = startY + (jFrame.getHeight() / 8);
+
+        // Update
+        int indexOfButton = indexOfGuiShapeById(id);
+        shapesToDraw.get(indexOfButton).setBounds(startX, startY, endX, endY);
+    }
+
+    private void formatSelectionButtons(String baseButtonId, String textId) {
+        int indexOfBaseButton = indexOfGuiShapeById(baseButtonId);
+        GuiShape baseButton = shapesToDraw.get(indexOfBaseButton);
+
+        int startX = baseButton.getPoint1X();
+        int endX = baseButton.getPoint2X();
+        int startY = baseButton.getPoint1Y();
+        int endY = baseButton.getPoint2Y();
+
+        // Update
+        int indexOfButtonText = indexOfGuiShapeById(textId);
+        shapesToDraw.get(indexOfButtonText).setBounds(startX, startY, endX, endY);
+    }
+
+    /*******************************************************************************************************************
+     * Instantiate Flashcard Elements
+     */
     private void instantiateFlashcardBase(String id) {
         GuiShape flashcardBase = new GuiRoundedRectangle(id, 0, 0, 0, 0, 25);
         flashcardBase.setFillColor(Color.WHITE);
@@ -138,14 +290,8 @@ public class GuiElements {
 
 
     /*******************************************************************************************************************
-     * Update GUI Shapes
+     * Update Flashcard Elements
      */
-    public void updatePageHeader(JFrame jFrame) {
-        int indexOfPageHeader = indexOfGuiShapeById(PAGE_HEADER_ID);
-        shapesToDraw.get(indexOfPageHeader).setBounds(0, 50, jFrame.getWidth(), 150);
-    }
-
-
     public int updateFlashcardBase(String id, JFrame jFrame) {
         int cardHeight = jFrame.getHeight() - 200;
         int cardWidth = (cardHeight * 5) / 3;

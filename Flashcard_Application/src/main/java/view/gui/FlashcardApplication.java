@@ -1,6 +1,9 @@
 package main.java.view.gui;
 
 
+import main.java.CollectionManager;
+import main.java.model.Deck;
+import main.java.model.Subject;
 import main.java.view.gui.shapes.GuiShape;
 
 import javax.swing.*;
@@ -8,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO: Add font private variables to the text box and the text lines
+ * TODO: Add private font variables to the text box and the text lines
  * TODO: Resize Text With Window
- * TODO: Add Select Subject Buttons
  * TODO: Change xScaleText to xScale for all objects
- * TODO: Add Subject Selector Page
- * TODO: Add Deck Selector Page
+ * TODO: Add a back button
+ * TODO: Add Flashcard selector Page
+ * TODO: Add Subject Page
  */
 
 public class FlashcardApplication {
@@ -22,12 +25,14 @@ public class FlashcardApplication {
      * Constants
      */
     private final static String HOMEPAGE = "homepage";
-    private final static String SUBJECT_PAGE = "subject page";
+    private final static String SELECT_SUBJECT_PAGE = "select subject page";
+    private final static String CURRENT_SUBJECT_PAGE = "current subject page";
+    private final static String DELETE_SUBJECT_PAGE = "delete subject page";
     private final static String NEW_SUBJECT_PAGE = "new subject page";
-    private final static String DECK_PAGE = "deck page";
+    private final static String CURRENT_DECK_PAGE = "current deck page";
     private final static String NEW_DECK_PAGE = "new deck dage";
-    private final static String NEW_FLASHCARD_PAGE = "new card page";
     private final static String DELETE_DECK_PAGE = "delete deck page";
+    private final static String NEW_FLASHCARD_PAGE = "new card page";
     private final static String ALL_FLASHCARDS_IN_DECK_PAGE = "look through all flashcards in deck page";
     private final static String FLASHCARD_PAGE = "flashcard page";
     private final static String RENAME_DECK_PAGE = "rename deck page";
@@ -44,6 +49,7 @@ public class FlashcardApplication {
     private Gui gui;
     private GuiElements guiElements;
     private ButtonManager buttonManager;
+    private CollectionManager collectionManager;
     private String currentPage = HOMEPAGE;
 
 
@@ -55,6 +61,27 @@ public class FlashcardApplication {
         this.gui = gui;
         this.guiElements = new GuiElements();
         this.buttonManager = new ButtonManager();
+
+        this.collectionManager = new CollectionManager();
+
+        //TODO: Remove Later
+        Subject s1 = new Subject("Subject 1");
+        s1.addDeck(new Deck("Deck 1", 1));
+        s1.addDeck(new Deck("Deck 2", 1));
+        collectionManager.addSubject(s1);
+        Subject s2 = new Subject("Subject B");
+        collectionManager.addSubject(s2);
+        Subject s3 = new Subject("Advanced Neuroscience Terms");
+        s3.addDeck(new Deck("Deck 1", 1));
+        s3.addDeck(new Deck("Deck 2", 1));
+        s3.addDeck(new Deck("Deck 3", 1));
+        s3.addDeck(new Deck("Deck 4", 1));
+        s3.addDeck(new Deck("Deck 5", 1));
+        s3.addDeck(new Deck("Deck 6", 1));
+        s3.addDeck(new Deck("Deck 7", 1));
+        collectionManager.addSubject(s3);
+        Subject s4 = new Subject("Marine Biology");
+        collectionManager.addSubject(s4);
     }
 
 
@@ -82,6 +109,7 @@ public class FlashcardApplication {
     public void runtimeStartEvent(JFrame jFrame) {
         instantiateHomepage();
         gui.repaint();
+        // TODO LATER: collectionManager.loadData();
         System.out.println("RUNTIME START EVENT >>> " + guiElements.getShapesToDraw().size());
     }
 
@@ -116,14 +144,18 @@ public class FlashcardApplication {
         String result = buttonManager.mouseReleasedOnButton(gui);
 
         if (result != null) {
-            buttonActions(result, jFrame);
+            buttonActions(result);
 
             // Makes sure all shapes are prepped to be redrawn
             List<GuiShape> shapesToDraw = updateWindow(jFrame);
             gui.setShapesToDraw(shapesToDraw);
 
+            // Checks if mouse is over a newly-loaded button
+            buttonManager.updateButtonsWhenMouseGoesInOrOut(gui, guiElements);
+
             gui.repaint();
         }
+
 
         System.out.println("MOUSE RELEASED EVENT >>> " + result);
     }
@@ -136,11 +168,14 @@ public class FlashcardApplication {
         if(currentPage.equals(HOMEPAGE)) {
             updateHomepage(jFrame);
         }
-        else if (currentPage.equals(SUBJECT_PAGE)) {
-            updateSubjectPage(jFrame);
+        else if (currentPage.equals(SELECT_SUBJECT_PAGE)) {
+            updateSelectSubjectPage(jFrame, collectionManager.getSubjectList());
         }
         else if (currentPage.equals(FLASHCARD_PAGE)) {
             updateFlashcardPage(jFrame);
+        }
+        else if (currentPage.equals(CURRENT_SUBJECT_PAGE)) {
+            updateCurrentSubjectPage(jFrame, collectionManager.getCurrentSubject().getListOfDecks());
         }
 
         //
@@ -151,9 +186,16 @@ public class FlashcardApplication {
     /*******************************************************************************************************************
      * Button Actions
      */
-    private void buttonActions(String command, JFrame jFrame) {
+    private void buttonActions(String command) {
         if(command.equals(GuiElements.SUBJECT_PAGE_BUTTON_ID)) {
-            instantiateSubjectPage();
+            instantiateSelectSubjectPage(collectionManager.getSubjectList());
+        }
+        else if(command.contains(GuiElements.SELECT_SUBJECT_BUTTON_ID)) {
+            String stringIndexOfSubject = command.replace(GuiElements.SELECT_SUBJECT_BUTTON_ID, "");
+            instantiateCurrentSubjectPage(stringIndexOfSubject);
+        }
+        else if(command.contains(GuiElements.SELECT_DECK_BUTTON_ID)) {
+            // TODO -- Go to selected deck page
         }
 
         //instantiateFlashcardPage(jFrame);
@@ -162,41 +204,70 @@ public class FlashcardApplication {
 
 
     /*******************************************************************************************************************
-     * Instantiate Pages
+     * Homepage Methods
      */
     private void instantiateHomepage() {
         currentPage = HOMEPAGE;
         guiElements.instantiateStartButton();
     }
 
-    private void instantiateSubjectPage() {
-        currentPage = SUBJECT_PAGE;
+    private void updateHomepage(JFrame jFrame) {
+        guiElements.updateStartButton(jFrame);
+    }
+
+    /*******************************************************************************************************************
+     * Select Subject Page Methods
+     */
+    private void instantiateSelectSubjectPage(List<Subject> subjects) {
+        currentPage = SELECT_SUBJECT_PAGE;
         clearAllGuiShapes();
         guiElements.instantiateSubjectPageHeader();
+        guiElements.instantiateSubjectSelectionButtons(subjects);
 
         //
         List<GuiShape> shapesToDraw = guiElements.getShapesToDraw();
         gui.setShapesToDraw(shapesToDraw);
     }
 
+    private void updateSelectSubjectPage(JFrame jFrame, List<Subject> subjects) {
+        guiElements.updatePageHeader(jFrame);
+        guiElements.updateSubjectSelectionButtons(jFrame, subjects);
+    }
+
+    /*******************************************************************************************************************
+     * Current Subject Page Methods
+     */
+    private void instantiateCurrentSubjectPage(String stringIndexOfCurrentSubject) {
+        try {
+            int indexOfSubject = Integer.parseInt(stringIndexOfCurrentSubject);
+            Subject currentSubject = collectionManager.getSubjectList().get(indexOfSubject);
+            collectionManager.setCurrentSubject(currentSubject);
+
+            currentPage = CURRENT_SUBJECT_PAGE;
+            clearAllGuiShapes();
+
+            //Add Elements to the page
+            guiElements.instantiateCurrentSubjectPageHeader(collectionManager.getCurrentSubject());
+            guiElements.instantiateDeckSelectionButtons(collectionManager.getCurrentSubject().getListOfDecks());
+        } catch (NumberFormatException e) {
+            System.err.println("Number format exception in FlashcardApplication --> instantiateCurrentSubjectPage method");
+        }
+    }
+
+    private void updateCurrentSubjectPage(JFrame jFrame, List<Deck> decks) {
+        guiElements.updatePageHeader(jFrame);
+        guiElements.updateDeckSelectionButtons(jFrame, decks);
+    }
+
+    /*******************************************************************************************************************
+     * Flashcard Page Pages
+     */
     private void instantiateFlashcardPage() {
         clearAllGuiShapes();
         guiElements.instantiateFlashcard();
 
         List<GuiShape> shapesToDraw = guiElements.getShapesToDraw();
         gui.setShapesToDraw(shapesToDraw);
-    }
-
-
-    /*******************************************************************************************************************
-     * Update Pages
-     */
-    private void updateHomepage(JFrame jFrame) {
-        guiElements.updateStartButton(jFrame);
-    }
-
-    private void updateSubjectPage(JFrame jFrame) {
-        guiElements.updatePageHeader(jFrame);
     }
 
     private void updateFlashcardPage(JFrame jFrame) {

@@ -34,6 +34,7 @@ public class ButtonManager {
         hoveredOverButton = buttonTheMouseIsOver(gui, guiElements);
         boolean isMouseOverAButton = hoveredOverButton != null;
 
+        //System.out.println(hoveredOverButton.isMouseOver());
 
         if (isMouseOverAButton && !isMouseOverButtonState) {
             // Repaints and updates when mouse enters the button
@@ -50,6 +51,10 @@ public class ButtonManager {
                 pressedDownButton = null;
             }
             isUpdate = true;
+        }
+        else if (isMouseOverAButton && isMouseOverButtonState && !hoveredOverButton.isMouseOver()) {
+            // Highlights the hovered over button if the button loads under the mouse
+            hoveredOverButton.setMouseOver(true);
         }
 
         return isUpdate;
