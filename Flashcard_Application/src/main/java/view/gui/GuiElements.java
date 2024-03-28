@@ -106,6 +106,13 @@ public class GuiElements {
         shapesToDraw.add(subjectPageHeader);
     }
 
+    public void instantiateCurrentDeckPageHeader(Deck deck) {
+        String headerText = "All Flashcards in " +  deck.getDeckName();
+        GuiShape subjectPageHeader = new GuiTextBox(PAGE_HEADER_ID, headerText, 0, 0, 0, 0);
+        subjectPageHeader.setFillColor(Color.BLACK);
+        shapesToDraw.add(subjectPageHeader);
+    }
+
     /*******************************************************************************************************************
      * Update Headers
      */

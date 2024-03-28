@@ -90,14 +90,14 @@ public class Gui extends JFrame {
             public void mouseMoved(MouseEvent e) {
                 mouseX = e.getX();
                 mouseY = e.getY();
-                flashcardApplication.mouseMoveEvent(currentJframe);
+                flashcardApplication.mouseMoveEvent();
             }
 
             @Override
             public void mouseDragged(MouseEvent e) {
                 mouseX = e.getX();
                 mouseY = e.getY();
-                flashcardApplication.mouseMoveEvent(currentJframe);
+                flashcardApplication.mouseMoveEvent();
             }
         });
 

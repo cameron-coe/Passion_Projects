@@ -3,6 +3,7 @@ package main.java.view.gui;
 
 import main.java.CollectionManager;
 import main.java.model.Deck;
+import main.java.model.Flashcard;
 import main.java.model.Subject;
 import main.java.view.gui.shapes.GuiShape;
 
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * TODO: Remove shapesToDraw from Gui and have it get called from GuiElements
+ * TODO: Rename GuiElelments to GuiElementsToDraw
  * TODO: Add private font variables to the text box and the text lines
  * TODO: Resize Text With Window
  * TODO: Change xScaleText to xScale for all objects
@@ -120,14 +123,11 @@ public class FlashcardApplication {
         System.out.println("WINDOW SIZE CHANGE EVENT >>> " + shapesToDraw.size());
     }
 
-    public void mouseMoveEvent(JFrame jFrame) {
+    public void mouseMoveEvent() {
         boolean isUpdate = buttonManager.updateButtonsWhenMouseGoesInOrOut(gui, guiElements);
         if (isUpdate) {
             gui.repaint();
         }
-
-        List<GuiShape> shapesToDraw = updateWindow(jFrame);
-        System.out.println("MOUSE MOVE EVENT >>> " + shapesToDraw.size());
     }
 
     public void mousePressedEvent(JFrame jFrame) {
@@ -177,6 +177,9 @@ public class FlashcardApplication {
         else if (currentPage.equals(CURRENT_SUBJECT_PAGE)) {
             updateCurrentSubjectPage(jFrame, collectionManager.getCurrentSubject().getListOfDecks());
         }
+        else if (currentPage.equals(CURRENT_DECK_PAGE)) {
+            updateCurrentDeckPage(jFrame);
+        }
 
         //
         return guiElements.getShapesToDraw();
@@ -195,7 +198,8 @@ public class FlashcardApplication {
             instantiateCurrentSubjectPage(stringIndexOfSubject);
         }
         else if(command.contains(GuiElements.SELECT_DECK_BUTTON_ID)) {
-            // TODO -- Go to selected deck page
+            String stringIndexOfDeck = command.replace(GuiElements.SELECT_DECK_BUTTON_ID, "");
+            instantiateCurrentDeckPage(stringIndexOfDeck);
         }
 
         //instantiateFlashcardPage(jFrame);
@@ -214,6 +218,7 @@ public class FlashcardApplication {
     private void updateHomepage(JFrame jFrame) {
         guiElements.updateStartButton(jFrame);
     }
+
 
     /*******************************************************************************************************************
      * Select Subject Page Methods
@@ -234,6 +239,7 @@ public class FlashcardApplication {
         guiElements.updateSubjectSelectionButtons(jFrame, subjects);
     }
 
+
     /*******************************************************************************************************************
      * Current Subject Page Methods
      */
@@ -247,8 +253,8 @@ public class FlashcardApplication {
             clearAllGuiShapes();
 
             //Add Elements to the page
-            guiElements.instantiateCurrentSubjectPageHeader(collectionManager.getCurrentSubject());
-            guiElements.instantiateDeckSelectionButtons(collectionManager.getCurrentSubject().getListOfDecks());
+            guiElements.instantiateCurrentSubjectPageHeader(currentSubject);
+            guiElements.instantiateDeckSelectionButtons(currentSubject.getListOfDecks());
         } catch (NumberFormatException e) {
             System.err.println("Number format exception in FlashcardApplication --> instantiateCurrentSubjectPage method");
         }
@@ -258,6 +264,34 @@ public class FlashcardApplication {
         guiElements.updatePageHeader(jFrame);
         guiElements.updateDeckSelectionButtons(jFrame, decks);
     }
+
+
+    /*******************************************************************************************************************
+     * Current Deck Page Methods
+     */
+    private void instantiateCurrentDeckPage(String stringIndexOfCurrentDeck) {
+        try {
+            int indexOfDeck = Integer.parseInt(stringIndexOfCurrentDeck);
+            Deck currentDeck = collectionManager.getCurrentSubject().getListOfDecks().get(indexOfDeck);
+            collectionManager.setCurrentDeck(currentDeck);
+
+            currentPage = CURRENT_DECK_PAGE;
+            clearAllGuiShapes();
+
+            //Add Elements to the page
+            guiElements.instantiateCurrentDeckPageHeader(currentDeck);
+            //TODO: guiElements.instantiateFlashcardSelectionButtons(currentSubject.getListOfFlashcards());
+        } catch (NumberFormatException e) {
+            System.err.println("Number format exception in FlashcardApplication --> instantiateCurrentDeckPage method");
+        }
+
+    }
+
+    private void updateCurrentDeckPage(JFrame jFrame) {
+        guiElements.updatePageHeader(jFrame);
+        // Todo
+    }
+
 
     /*******************************************************************************************************************
      * Flashcard Page Pages
